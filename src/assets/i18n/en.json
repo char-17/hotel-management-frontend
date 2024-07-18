@@ -1,0 +1,16 @@
+{
+  "REGISTER": {
+    "TITLE": "Register",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "ADDRESS": "Address",
+    "EMAIL": "Email",
+    "CHOOSE_ONE": "Choose one",
+    "DATE_OF_BIRTH": "Date of Birth",
+    "VALID_OPTION": "Valid option",
+    "INVALID_OPTION": "Invalid option",
+    "SIGN_UP": "Sign Up"
+  }
+}

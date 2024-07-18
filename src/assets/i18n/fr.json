@@ -1,0 +1,16 @@
+{
+  "REGISTER": {
+    "TITLE": "S'inscrire",
+    "FIRST_NAME": "Prénom",
+    "LAST_NAME": "Nom de famille",
+    "USERNAME": "Nom d'utilisateur",
+    "PASSWORD": "Mot de passe",
+    "ADDRESS": "Adresse",
+    "EMAIL": "E-mail",
+    "CHOOSE_ONE": "Choisissez-en un",
+    "DATE_OF_BIRTH": "Date de naissance",
+    "VALID_OPTION": "Option valide",
+    "INVALID_OPTION": "Option invalide",
+    "SIGN_UP": "S'inscrire"
+  }
+}
