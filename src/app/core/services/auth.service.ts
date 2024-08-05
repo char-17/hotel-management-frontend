@@ -1,24 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { User } from '../models/user.model';  // Correct path
-import { AppConfigService } from '../../config/app-config.service';
+import { Observable, tap } from 'rxjs';
+import { User } from '../models/user.model'; // Correct path
+import { environment } from '../../../environments/environment';
+import { UserAuthResponse } from '../models/user-auth-response.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl: string;
+  private readonly apiUrl: string;
 
-  constructor(private http: HttpClient, private configService: AppConfigService) {
-    this.apiUrl = `${configService.apiUrl}/auth`;
+  constructor(private http: HttpClient) {
+    this.apiUrl = `${environment.apiUrl}`;
   }
 
   register(user: User): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/register`, user);
   }
 
-  login(user: User): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/login`, user);
+  login(credentials: {
+    email: string;
+    password: string;
+  }): Observable<UserAuthResponse> {
+    return this.http
+      .post<UserAuthResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(
+        tap((response) => {
+          //save jwt token or maybe some other user information too
+          localStorage.setItem('authToken', response.token);
+          // localStorage.setItem('userName', response.user.username);
+        }),
+      );
+  }
+
+  private _role: string = 'admin2';
+
+  get getUserRole(): string {
+    return this._role;
+  }
+
+  set setUserRole(value: string) {
+    this._role = value;
   }
 }

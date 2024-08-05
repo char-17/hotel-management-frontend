@@ -1,7 +1,3 @@
-.spacer {
-  flex: 1 1 auto;
-}
-
 mat-toolbar {
   background: #7b1fa2; /* Purple */
   color: white;

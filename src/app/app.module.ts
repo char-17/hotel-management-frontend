@@ -3,41 +3,40 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavToolbarComponent } from "./shared/nav-toolbar/nav-toolbar.component";
-import { LoginComponent } from "./features/login/login.component";
-import { RegisterComponent } from "./features/register/register.component";
-import { BookingsComponent } from "./features/bookings/bookings.component";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatButtonModule } from "@angular/material/button";
-import { MatIconModule } from "@angular/material/icon";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NavToolbarComponent } from './shared/navbar/nav-toolbar/nav-toolbar.component';
+import { LoginComponent } from './features/login/login.component';
+import { RegisterComponent } from './features/register/register.component';
+import { BookingsComponent } from './features/bookings/bookings.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { HomeComponent } from './features/home/home/home.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './core/interceptor/auth.interceptor';
+import { AdminPageComponent } from './features/role-pages/admin-page/admin-page.component';
+import { ManagerPageComponent } from './features/role-pages/manager-page/manager-page.component';
+import { CustomDialogComponent } from './shared/components/custom-dialog/custom-dialog.component';
+import {
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogModule,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { AuthGuard } from './core/guards/auth.guard';
+import { AuthService } from './core/services/auth.service';
 
-// Custom date formats
-export const MY_DATE_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY',
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'DD/MM/YYYY',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
-
-
+// Define the root module of the application
 @NgModule({
-  declarations: [
-
-  
-    HomeComponent
-  ],
+  // Declarations array specifies the components, directives, and pipes that belong to this module
+  declarations: [ManagerPageComponent, CustomDialogComponent],
+  // Imports array specifies the external modules that this module depends on
   imports: [
-    BrowserModule,
+    AppComponent, // Main application component
+    BrowserModule, // Provides services that are essential to launch and run a browser app
     BrowserAnimationsModule,
     AppRoutingModule,
     MatToolbarModule,
@@ -48,13 +47,22 @@ export const MY_DATE_FORMATS = {
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    AppComponent,
     NavToolbarComponent,
     LoginComponent,
     RegisterComponent,
     BookingsComponent,
+    AdminPageComponent,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogModule,
   ],
-  providers: [],
-  bootstrap: []
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    AuthService,
+    AuthGuard,
+  ],
+  bootstrap: [],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Booking } from '../models/booking.model';  // Correct path
-import { AppConfigService } from '../../config/app-config.service';
+import { Booking } from '../models/booking.model';
+import {environment} from "../../../environments/environment";  // Correct path
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
-  private apiUrl: string;
+  private readonly apiUrl: string;
 
-  constructor(private http: HttpClient, private configService: AppConfigService) {
-    this.apiUrl = `${configService.apiUrl}/bookings`;
+  constructor(private http: HttpClient, ) {
+    this.apiUrl = `${environment.apiUrl}/bookings`;
   }
 
   getAllBookings(): Observable<Booking[]> {

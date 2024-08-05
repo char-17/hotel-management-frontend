@@ -1,6 +1,15 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  FormsModule,
+  NgForm,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ErrorStateMatcher, MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -9,14 +18,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgIf } from "@angular/common";
+import { NgIf } from '@angular/common';
+import { NavToolbarComponent } from '../../shared/navbar/nav-toolbar/nav-toolbar.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+  isErrorState(
+    control: AbstractControl | null,
+    form: FormGroupDirective | NgForm | null,
+  ): boolean {
     const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || control.touched || isSubmitted)
+    );
   }
 }
 
@@ -37,8 +52,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     MatNativeDateModule,
     FormsModule,
     ReactiveFormsModule,
-    NgIf
-  ]
+    NgIf,
+    NavToolbarComponent,
+  ],
 })
 export class RegisterComponent {
   registerForm: FormGroup;
@@ -56,7 +72,6 @@ export class RegisterComponent {
       dateOfBirth: ['', Validators.required],
       validSelection: ['', [Validators.required, Validators.pattern('valid')]],
     });
-
   }
 
   register() {
@@ -65,6 +80,4 @@ export class RegisterComponent {
       // Registration logic here
     }
   }
-
-
 }

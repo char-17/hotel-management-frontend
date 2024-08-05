@@ -4,15 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
-import { NgClass } from '@angular/common';
+import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { NavToolbarComponent } from '../../shared/navbar/nav-toolbar/nav-toolbar.component';
+import { NgClass, NgIf } from '@angular/common';
+import { AdminPageComponent } from '../../../features/role-pages/admin-page/admin-page.component';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-
+  selector: 'nav-toolbar',
+  templateUrl: './nav-toolbar.component.html',
+  styleUrl: './nav-toolbar.component.css',
+  standalone: true,
   imports: [
     MatCard,
     MatCardTitle,
@@ -22,23 +23,18 @@ import { NavToolbarComponent } from '../../shared/navbar/nav-toolbar/nav-toolbar
     MatInput,
     MatButton,
     MatLabel,
-    NgClass,
-    RouterLink,
+    MatToolbar,
     RouterOutlet,
-    NavToolbarComponent,
+    RouterLink,
+    NgClass,
+    NgIf,
+    AdminPageComponent,
   ],
-
-  standalone: true,
 })
-export class LoginComponent {
-  user = { username: '', password: '' };
+export class NavToolbarComponent {
   isMenuOpen = false;
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
-  }
-
-  login(): void {
-    // Login logic here
   }
 }
