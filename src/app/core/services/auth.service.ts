@@ -34,7 +34,8 @@ export class AuthService {
       );
   }
 
-  private _role: string = 'admin';
+  // private _role: string = 'admin';
+  private _role: string = 'manager';
 
   get getUserRole(): string {
     return this._role;

@@ -28,11 +28,12 @@ import {
 } from '@angular/material/dialog';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AuthService } from './core/services/auth.service';
+import { MatTooltip } from '@angular/material/tooltip';
 
 // Define the root module of the application
 @NgModule({
   // Declarations array specifies the components, directives, and pipes that belong to this module
-  declarations: [ManagerPageComponent, CustomDialogComponent],
+  declarations: [ManagerPageComponent],
   // Imports array specifies the external modules that this module depends on
   imports: [
     AppComponent, // Main application component
@@ -57,6 +58,8 @@ import { AuthService } from './core/services/auth.service';
     MatDialogActions,
     MatDialogClose,
     MatDialogModule,
+    CustomDialogComponent,
+    MatTooltip,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

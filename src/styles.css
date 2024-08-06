@@ -5,6 +5,6 @@
 @tailwind utilities;
 
 
-html, body { height: 80%; }
+html, body { height: 80%; min-width: 256px;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 

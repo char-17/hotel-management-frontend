@@ -1,1 +1,91 @@
-<p>manager-page works!</p>
+<div>
+  <!-- Navigation Bar -->
+  <div class="sticky top-0 bg-red-900 text-white flex items-center justify-between p-4 z-50 shadow-md">
+    <div class="text-lg font-semibold">
+      <a routerLink="/admin">Hotel Management</a>
+    </div>
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex space-x-4">
+      <a class="hover:underline hover:text-orange-500 transition duration-300">Arrivals</a>
+      <a class="hover:underline hover:text-orange-500 transition duration-300">Availability</a>
+      <a class="hover:underline hover:text-orange-500 transition duration-300">Reservations</a>
+      <a class="hover:underline hover:text-orange-500 transition duration-300">Login</a>
+    </div>
+    <!-- Mobile Menu Button -->
+    <button class="md:hidden" (click)="menuService.toggleMenu()">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+  </div>
+  <!-- Mobile Menu -->
+  <div [ngClass]="{ 'block': menuService.isMenuOpen, 'hidden': !menuService.isMenuOpen }"
+       class="md:hidden bg-orange-900 text-white p-4 space-y-2">
+    <a routerLink="/manage-users" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
+    <a routerLink="/manage-rooms" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
+    <a routerLink="/manage-bookings" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
+  </div>
+  <div>
+    <h2>This is the title of the admin page </h2>
+  </div>
+  <!-- Main Content -->
+  <div class="flex items-center justify-center min-h-52 p-4">
+    <!-- Responsive Grid for Mat-Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+      <div>
+        <mat-card class="manage-users hover:bg-lightgrey" matTooltip="Info about the action">
+          <mat-card-header>
+            <div mat-card-avatar class="gear-image"></div>
+            <mat-card-title>Manage Users</mat-card-title>
+            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <div>
+        <mat-card class="manage-rooms hover:bg-lightgrey">
+          <mat-card-header>
+            <div mat-card-avatar class="rooms"></div>
+            <mat-card-title>Manage Rooms</mat-card-title>
+            <mat-card-subtitle>Room Crud Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <div>
+        <mat-card class="manage-bookings hover:bg-lightgrey">
+          <mat-card-header>
+            <div mat-card-avatar class="booking"></div>
+            <mat-card-title>Manage Bookings</mat-card-title>
+            <mat-card-subtitle>Booking Crud Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <div>
+        <mat-card class="example-card hover:bg-lightgrey">
+          <mat-card-header>
+            <div mat-card-avatar class="gear-image"></div>
+            <mat-card-title>Manage Users</mat-card-title>
+            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <div>
+        <mat-card class="example-card hover:bg-lightgrey">
+          <mat-card-header>
+            <div mat-card-avatar class="gear-image"></div>
+            <mat-card-title>Manage Users</mat-card-title>
+            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+      <div>
+        <mat-card class="example-card hover:bg-lightgrey">
+          <mat-card-header>
+            <div mat-card-avatar class="gear-image"></div>
+            <mat-card-title>Manage Users</mat-card-title>
+            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

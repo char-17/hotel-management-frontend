@@ -29,6 +29,6 @@ export class CustomDialogComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.close();
-    }, 30000); // Close the dialog after 3 seconds
+    }, 3000); // Close the dialog after 3 seconds
   }
 }

@@ -20,3 +20,25 @@ mat-toolbar {
 .link-underline:hover::after {
   width: 100%;
 }
+
+/*Mat Cards Icons - Admin Page */
+.gear-image {
+  background-image: url('/src/assets/icons/admin-page-icons/gear-image.jpg');
+  background-size: cover;
+}
+
+.rooms{
+  background-image: url('/src/assets/icons/admin-page-icons/rooms.jpg');
+  background-size: cover;
+}
+
+.booking{
+  background-image: url('/src/assets/icons/admin-page-icons/booking.jpg');
+  background-size: cover;
+}
+
+mat-card:hover{
+  background-color: lightgrey;
+}
+
+
