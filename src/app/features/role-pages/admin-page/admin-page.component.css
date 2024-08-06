@@ -23,17 +23,17 @@ mat-toolbar {
 
 /*Mat Cards Icons - Admin Page */
 .gear-image {
-  background-image: url('/src/assets/icons/admin-page-icons/gear-image.jpg');
+  background-image: url('/assets/icons/admin-page-icons/gear-image.jpg');
   background-size: cover;
 }
 
 .rooms{
-  background-image: url('/src/assets/icons/admin-page-icons/rooms.jpg');
+  background-image: url('/assets/icons/admin-page-icons/rooms.jpg');
   background-size: cover;
 }
 
 .booking{
-  background-image: url('/src/assets/icons/admin-page-icons/booking.jpg');
+  background-image: url('/assets/icons/admin-page-icons/booking.jpg');
   background-size: cover;
 }
 
