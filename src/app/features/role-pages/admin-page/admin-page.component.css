@@ -1,0 +1,22 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  background: #7b1fa2; /* Purple */
+  color: white;
+}
+
+/* Custom class to add an orange underline effect on hover */
+.link-underline::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #FFB74D; /* Light orange */
+  transition: width 0.3s;
+}
+
+.link-underline:hover::after {
+  width: 100%;
+}

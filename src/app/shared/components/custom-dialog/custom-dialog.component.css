@@ -1,0 +1,18 @@
+.custom-dialog-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-bottom: 16px; /* Adjust as needed */
+}
+
+.button1 {
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.button1:hover {background-color: #e7e7e7;}
