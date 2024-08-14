@@ -1,19 +1,24 @@
 <nav-toolbar></nav-toolbar>
-<div class="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+<div class="flex items-center justify-center min-h-screen  p-4">
   <mat-card class="w-full max-w-md">
-    <mat-card-title class="text-center">Login</mat-card-title>
-    <mat-card-content>
-      <form (ngSubmit)="login()" class="space-y-4">
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Username</mat-label>
-          <input matInput [(ngModel)]="user.username" name="username" required>
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" [(ngModel)]="user.password" name="password" required>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" class="w-full">Login</button>
-      </form>
-    </mat-card-content>
+    <div class="bg-blue-400 ">
+      <mat-card-title class="text-center p-5  ">Login</mat-card-title>
+      <mat-card-content class="  ">
+        <form (ngSubmit)="login()" class="space-y-4">
+          <mat-form-field appearance="fill" class="w-full ">
+            <mat-label class="mt-5">Username</mat-label>
+            <input matInput [(ngModel)]="user.username" name="username" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [(ngModel)]="user.password" name="password" required>
+          </mat-form-field>
+          <div class="flex justify-center ">
+            <button type="submit" class="bg-blue-300 bg-transparent hover:bg-blue-600 text-slate-950 hover:text-white py-3 px-8 border border-blue-500 hover:border-transparent rounded">Login</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </div>
+
   </mat-card>
 </div>

@@ -29,6 +29,24 @@ import {
 import { AuthGuard } from './core/guards/auth.guard';
 import { AuthService } from './core/services/auth.service';
 import { MatTooltip } from '@angular/material/tooltip';
+import { ManageUsersComponent } from './features/role-pages/admin-page/manager/manage-users/manage-users.component';
+import { ManageRoomsComponent } from './features/role-pages/admin-page/manager/manage-rooms/manage-rooms.component';
+import { ManageBookingsComponent } from './features/role-pages/admin-page/manager/manage-bookings/manage-bookings.component';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatNoDataRow,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatPaginator } from '@angular/material/paginator';
 
 // Define the root module of the application
 @NgModule({
@@ -61,6 +79,22 @@ import { MatTooltip } from '@angular/material/tooltip';
     CustomDialogComponent,
     MatTooltip,
     ManagerPageComponent,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatProgressSpinner,
+    MatPaginator,
+    MatNoDataRow,
+    MatHeaderRow,
+    MatRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    ManageUsersComponent,
+    ManageRoomsComponent,
+    ManageBookingsComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

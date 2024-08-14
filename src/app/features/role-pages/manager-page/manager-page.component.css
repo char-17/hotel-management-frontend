@@ -1,16 +1,16 @@
 /*Mat Cards Icons - Manager Page */
-.gear-image {
-  background-image: url('/assets/icons/admin-page-icons/gear-image.jpg');
+.arrivals {
+  background-image: url('/assets/icons/manager-page-icons/arrivals.jpg');
   background-size: cover;
 }
 
-.rooms{
-  background-image: url('/assets/icons/admin-page-icons/rooms.jpg');
+.availability{
+  background-image: url('/assets/icons/manager-page-icons/availability.jpg');
   background-size: cover;
 }
 
-.booking{
-  background-image: url('/assets/icons/admin-page-icons/booking.jpg');
+.reservations{
+  background-image: url('/assets/icons/manager-page-icons/reservations.jpg');
   background-size: cover;
 }
 

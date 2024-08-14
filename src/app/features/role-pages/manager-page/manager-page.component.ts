@@ -11,7 +11,7 @@ import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.
 import { RouterLink } from '@angular/router';
 import { NgClass, NgOptimizedImage } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-manager-page',
@@ -30,6 +30,7 @@ import { MatIcon } from '@angular/material/icon';
     MatCardSubtitle,
     MatCardAvatar,
     MatTooltip,
+    MatIconModule,
   ],
 })
 export class ManagerPageComponent {

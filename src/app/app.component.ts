@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { NavToolbarComponent } from './shared/navbar/nav-toolbar/nav-toolbar.component';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { HomeComponent } from './features/home/home/home.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
-  imports: [NavToolbarComponent, RouterOutlet, NgIf],
+  imports: [NavToolbarComponent, RouterOutlet, NgIf, HomeComponent],
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {

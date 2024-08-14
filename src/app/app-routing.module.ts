@@ -7,6 +7,7 @@ import { HomeComponent } from './features/home/home/home.component';
 import { AdminPageComponent } from './features/role-pages/admin-page/admin-page.component';
 import { ManagerPageComponent } from './features/role-pages/manager-page/manager-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { ManageUsersComponent } from './features/role-pages/admin-page/manager/manage-users/manage-users.component';
 
 export const routes: Routes = [
   { path: 'bookings', component: BookingsComponent },
@@ -14,6 +15,8 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'manage-users', component: ManageUsersComponent },
+  // { path: 'manage-rooms', component: ManageRoomsComponent },
 
   {
     path: 'admin',
