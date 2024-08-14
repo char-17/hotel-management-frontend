@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HotelManagement</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--  <link rel="icon" type="image/x-icon" href="assets/icons/favicon/favicon.ico">-->
+  <!-- Add this line to load the Material Icons font -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Add Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+</head>
+<body class="bg-gray-100">
+
+<app-admin-page></app-admin-page>
+<div class="container mx-auto p-4">
+  <form [formGroup]="userForm" autocomplete="off">
+    <ng-container formArrayName="userRows">
+      <div class="overflow-x-auto">
+        <table mat-table [dataSource]="dataSource"
+               class="mat-elevation-z8 min-w-full sm:min-w-full md:min-w-full lg:min-w-full xl:min-w-full w-full">
+
+<!--          &lt;!&ndash; ID Column &ndash;&gt;-->
+<!--          <ng-container matColumnDef="id">-->
+<!--            <th mat-header-cell *matHeaderCellDef class="W-1/8 p-2 text-left">ID</th>-->
+<!--            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">-->
+<!--              <mat-form-field class="w-" appearance="fill">-->
+<!--                <input matInput type="text" formControlName="id" readonly/>-->
+<!--              </mat-form-field>-->
+<!--            </td>-->
+<!--          </ng-container>-->
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="W-1/12 p-2 text-left ">ID</th>
+            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
+              <mat-form-field class="id-column" appearance="fill">
+                <input matInput formControlName="id" readonly />
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+
+          <!-- Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef class="p-2 text-left">Username</th>
+            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
+              <mat-form-field class="w-full">
+                <input matInput type="text" formControlName="username"
+                       [readonly]="!(userRows.at(i).get('isEditable')?.value)"/>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- Password Column -->
+          <ng-container matColumnDef="password">
+            <th mat-header-cell *matHeaderCellDef class="p-2 text-left">Password</th>
+            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
+              <mat-form-field class="w-full">
+                <input [type]="showPassword[i] ? 'text' : 'password'"
+                       matInput formControlName="password"
+                       [readonly]="!(userRows.at(i).get('isEditable')?.value)"/>
+                <button mat-icon-button matSuffix (click)="togglePasswordVisibility(i)">
+                  <mat-icon>{{ showPassword[i] ? 'visibility' : 'visibility_off' }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="p-2 text-left">Actions</th>
+            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
+              <button mat-icon-button matTooltip="Save Changes" (click)="saveUser(i)"
+                      *ngIf="userRows.at(i).get('isEditable')?.value" color="primary">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Cancel Changes" color="warn"
+                      (click)="cancelEdit(i)" *ngIf="userRows.at(i).get('isEditable')?.value">
+                <mat-icon>cancel</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Edit" color="primary"
+                      (click)="editUser(i)" *ngIf="!(userRows.at(i).get('isEditable')?.value)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Delete" color="warn"
+                      (click)="deleteUser(i)" *ngIf="!(userRows.at(i).get('isEditable')?.value)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Table Rows -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </ng-container>
+  </form>
+
+  <!-- Loading Spinner -->
+  <mat-card *ngIf="isLoading" class="flex justify-center items-center mt-4">
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+  </mat-card>
+
+  <!-- Paginator -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+</div>
+<div class="container mx-auto pl-4">
+  <button mat-raised-button color="primary"
+          (click)="addNewUser()"
+          class="mb-4"
+          [disabled]="!canAddNewUser">
+    <mat-icon>add</mat-icon>
+    Add New User
+  </button>
+</div>
+
+</body>
+</html>
