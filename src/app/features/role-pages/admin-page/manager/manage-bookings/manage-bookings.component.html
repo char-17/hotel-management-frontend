@@ -1,1 +1,90 @@
-<p>manage-bookings works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>HotelManagement</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+<app-admin-page></app-admin-page>
+
+<div [formGroup]="bookingForm" class="p-4 max-w-full mx-auto">
+  <ng-container formArrayName="bookingRows">
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-full sm:w-full md:w-full lg:w-full xl:w-full">
+
+        <!-- Booking ID -->
+        <ng-container matColumnDef="bookingId">
+          <th mat-header-cell *matHeaderCellDef class="w-1/12 p-2 text-left text-sm sm:text-base md:text-lg">ID</th>
+          <td mat-cell *matCellDef="let element; let i = index;" [formGroupName]="i" class="p-2">
+            <mat-form-field class="w-full">
+              <input type="text" matInput formControlName="bookingId" readonly class="text-xs sm:text-sm md:text-base lg:text-lg">
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!-- Check In Date -->
+        <ng-container matColumnDef="bookingCheckInDate">
+          <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-sm sm:text-base md:text-lg">Check In Date</th>
+          <td mat-cell *matCellDef="let element; let i = index;" [formGroupName]="i" class="p-2">
+            <mat-form-field class="w-full">
+              <input matInput type="text" formControlName="bookingCheckInDate" class="text-xs sm:text-sm md:text-base lg:text-lg">
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!-- Check Out Date -->
+        <ng-container matColumnDef="bookingCheckOutDate">
+          <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-sm sm:text-base md:text-lg">Check Out Date</th>
+          <td mat-cell *matCellDef="let element; let i = index;" [formGroupName]="i" class="p-2">
+            <mat-form-field class="w-full">
+              <input matInput type="text" formControlName="bookingCheckOutDate" class="text-xs sm:text-sm md:text-base lg:text-lg">
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+
+        <!-- Room ID -->
+        <ng-container matColumnDef="roomId">
+          <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-sm sm:text-base md:text-lg">Room ID</th>
+          <td mat-cell *matCellDef="let element; let i = index;" [formGroupName]="i" class="p-2">
+            <mat-form-field class="w-full">
+              <input matInput type="text" formControlName="roomId" class="text-xs sm:text-sm md:text-base lg:text-lg">
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!-- User ID -->
+        <ng-container matColumnDef="userId">
+          <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-sm sm:text-base md:text-lg">User ID</th>
+          <td mat-cell *matCellDef="let element; let i = index;" [formGroupName]="i" class="p-2">
+            <mat-form-field class="w-full">
+              <input matInput type="text" formControlName="userId" class="text-xs sm:text-sm md:text-base lg:text-lg">
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="p-2 text-left text-sm sm:text-base md:text-lg">Actions</th>
+          <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
+            <button class="text-xs sm:text-sm md:text-base lg:text-lg p-1 bg-blue-500 text-white rounded">Edit</button>
+            <button class="text-xs sm:text-sm md:text-base lg:text-lg p-1 bg-red-500 text-white rounded">Delete</button>
+          </td>
+        </ng-container>
+
+        <!-- Header row -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="text-xs sm:text-sm md:text-base lg:text-lg"></tr>
+
+        <!-- Data row -->
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="text-xs sm:text-sm md:text-base lg:text-lg"></tr>
+
+      </table>
+    </div>
+  </ng-container>
+</div>
+</body>
+</html>

@@ -62,12 +62,12 @@ export class ManageRoomsComponent implements OnInit {
   roomForm: FormGroup;
   dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = [
-    'id',
-    'room number',
-    'room price',
-    'room status',
-    'room type',
-    'capacity',
+    'roomId',
+    'roomNumber',
+    'roomPrice',
+    'roomStatus',
+    'roomType',
+    'roomCapacity',
     'actions',
   ];
 
@@ -92,84 +92,76 @@ export class ManageRoomsComponent implements OnInit {
   loadRooms() {
     const rooms = [
       {
-        id: '1',
+        roomId: '1',
         roomNumber: '101',
         roomPrice: 100,
         roomStatus: 'Available',
         roomType: 'Single',
-        capacity: 1,
+        roomCapacity: 1,
       },
       {
-        id: '2',
+        roomId: '2',
         roomNumber: '102',
         roomPrice: 150,
         roomStatus: 'Occupied',
         roomType: 'Double',
-        capacity: 2,
+        roomCapacity: 2,
       },
       {
-        id: '3',
+        roomId: '3',
         roomNumber: '103',
         roomPrice: 200,
         roomStatus: 'Available',
         roomType: 'Suite',
-        capacity: 4,
+        roomCapacity: 4,
       },
       {
-        id: '4',
+        roomId: '4',
         roomNumber: '104',
         roomPrice: 250,
         roomStatus: 'Occupied',
         roomType: 'Single',
-        capacity: 1,
+        roomCapacity: 1,
       },
       {
-        id: '5',
+        roomId: '5',
         roomNumber: '105',
         roomPrice: 300,
         roomStatus: 'Available',
         roomType: 'Double',
-        capacity: 2,
+        roomCapacity: 2,
       },
       {
-        id: '6',
+        roomId: '6',
         roomNumber: '106',
         roomPrice: 350,
         roomStatus: 'Under Maintenance',
         roomType: 'Suite',
-        capacity: 4,
+        roomCapacity: 4,
       },
       {
-        id: '7',
+        roomId: '7',
         roomNumber: '107',
         roomPrice: 400,
         roomStatus: 'Available',
         roomType: 'Single',
-        capacity: 1,
+        roomCapacity: 1,
       },
       {
-        id: '8',
+        roomId: '8',
         roomNumber: '108',
         roomPrice: 450,
         roomStatus: 'Occupied',
         roomType: 'Double',
-        capacity: 2,
+        roomCapacity: 2,
       },
       {
-        id: '9',
+        roomId: '9',
         roomNumber: '109',
         roomPrice: 500,
         roomStatus: 'Available',
         roomType: 'Suite',
-        capacity: 4,
-      },
-      {
-        id: '10',
-        roomNumber: '110',
-        roomPrice: 550,
-        roomStatus: 'Under Maintenance',
-        roomType: 'Single',
-        capacity: 1,
+        roomCapacity: 4,
       },
     ];
 
@@ -178,20 +170,20 @@ export class ManageRoomsComponent implements OnInit {
   }
 
   addRoomRow(room: {
-    id: string;
+    roomId: string;
     roomNumber: string;
     roomPrice: number;
     roomStatus: string;
     roomType: string;
-    capacity: number;
+    roomCapacity: number;
   }) {
     const row: FormGroup = this.fb.group({
-      id: [room.id],
+      roomId: [room.roomId],
       roomNumber: [room.roomNumber],
       roomPrice: [room.roomPrice],
       roomStatus: [room.roomStatus],
       roomType: [room.roomType],
-      capacity: [room.capacity],
+      roomCapacity: [room.roomCapacity],
     });
     this.roomRows.push(row);
   }

@@ -8,6 +8,9 @@ import { AdminPageComponent } from './features/role-pages/admin-page/admin-page.
 import { ManagerPageComponent } from './features/role-pages/manager-page/manager-page.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { ManageUsersComponent } from './features/role-pages/admin-page/manager/manage-users/manage-users.component';
+import { ManageRoomsComponent } from './features/role-pages/admin-page/manager/manage-rooms/manage-rooms.component';
+import { ManageBookingsComponent } from './features/role-pages/admin-page/manager/manage-bookings/manage-bookings.component';
+// import { ManageBookingsComponent } from './features/role-pages/admin-page/manager/manage-bookings/manage-bookings.component';
 
 export const routes: Routes = [
   { path: 'bookings', component: BookingsComponent },
@@ -16,7 +19,8 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'manage-users', component: ManageUsersComponent },
-  // { path: 'manage-rooms', component: ManageRoomsComponent },
+  { path: 'manage-rooms', component: ManageRoomsComponent },
+  { path: 'manage-bookings', component: ManageBookingsComponent },
 
   {
     path: 'admin',

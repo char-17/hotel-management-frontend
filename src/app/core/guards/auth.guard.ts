@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
       });
 
       dialogRef.afterClosed().subscribe(() => {
-        this.router.navigate(['/home']); // Redirect to home after dialog is closed
+        this.router.navigate(['/home']).then((r) => 'Page not found'); // Redirect to home after dialog is closed
       });
 
       return false;
