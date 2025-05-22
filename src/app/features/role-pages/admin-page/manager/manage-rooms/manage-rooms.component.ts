@@ -20,14 +20,8 @@ import {
 } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { AdminPageComponent } from '../../admin-page.component';
-import { MatCard } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
 import { MatInput } from '@angular/material/input';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatTooltip } from '@angular/material/tooltip';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-manage-rooms',
@@ -36,7 +30,6 @@ import { NgIf } from '@angular/common';
   standalone: true,
   imports: [
     AdminPageComponent,
-    MatCard,
     MatCell,
     MatCellDef,
     MatColumnDef,
@@ -44,16 +37,10 @@ import { NgIf } from '@angular/common';
     MatHeaderCell,
     MatHeaderRow,
     MatHeaderRowDef,
-    MatIcon,
-    MatIconButton,
     MatInput,
-    MatPaginator,
-    MatProgressSpinner,
     MatRow,
     MatRowDef,
     MatTable,
-    MatTooltip,
-    NgIf,
     ReactiveFormsModule,
     MatHeaderCellDef,
   ],

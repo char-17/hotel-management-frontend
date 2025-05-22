@@ -26,9 +26,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { AdminPageComponent } from '../../admin-page.component';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-manage-bookings',
@@ -45,7 +44,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatTooltipModule,
     MatCardModule,
     MatPaginatorModule,
-    NgIf,
     AdminPageComponent,
     MatTable,
     MatColumnDef,
@@ -57,8 +55,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     MatRow,
     MatHeaderRowDef,
     MatRowDef,
-    MatProgressSpinner,
-    DatePipe,
   ],
 })
 export class ManageBookingsComponent implements OnInit {
