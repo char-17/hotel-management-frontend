@@ -45,13 +45,13 @@
             </mat-form-field>
           </div>
           <div class="mb-4">
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-label>Address</mat-label>
-              <input matInput formControlName="address" required>
-              <mat-error *ngIf="registerForm.get('address')?.hasError('required')">
-                Address is required
-              </mat-error>
-            </mat-form-field>
+<!--            <mat-form-field appearance="fill" class="w-full">-->
+<!--              <mat-label>Address</mat-label>-->
+<!--              <input matInput formControlName="address" required>-->
+<!--              <mat-error *ngIf="registerForm.get('address')?.hasError('required')">-->
+<!--                Address is required-->
+<!--              </mat-error>-->
+<!--            </mat-form-field>-->
           </div>
           <div class="mb-4">
             <mat-form-field appearance="fill" class="w-full">
@@ -68,9 +68,9 @@
           <div class="mb-4">
             <mat-form-field appearance="fill" class="w-full">
               <mat-label>Gender</mat-label>
-              <mat-select formControlName="validSelection" [errorStateMatcher]="matcher">
-                <mat-option value="valid">Male ♂</mat-option>
-                <mat-option value="invalid">Female ♀</mat-option>
+              <mat-select formControlName="validSelection" >
+                <mat-option value="male">Male ♂</mat-option>
+                <mat-option value="female">Female ♀</mat-option>
               </mat-select>
               <mat-error *ngIf="registerForm.get('validSelection')?.hasError('required')">
                 You must make a selection
@@ -91,9 +91,11 @@
               </mat-error>
             </mat-form-field>
           </div>
-
+          <div class="mb-4">
+            <button mat-raised-button color="primary" type="submit" class="w-full">Sign Up</button>
+          </div>
         </form>
-        <button mat-raised-button color="primary" type="submit" class="w-full">Sign Up</button>
+<!--        <button mat-raised-button color="primary" type="submit" class="w-full">Sign Up</button>-->
       </mat-card-content>
     </mat-card>
   </div>
