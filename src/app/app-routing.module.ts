@@ -10,6 +10,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { ManageUsersComponent } from './features/role-pages/admin-page/manager/manage-users/manage-users.component';
 import { ManageRoomsComponent } from './features/role-pages/admin-page/manager/manage-rooms/manage-rooms.component';
 import { ManageBookingsComponent } from './features/role-pages/admin-page/manager/manage-bookings/manage-bookings.component';
+import { DashboardComponent } from './features/dashboard/dashboard/dashboard.component';
 // import { ManageBookingsComponent } from './features/role-pages/admin-page/manager/manage-bookings/manage-bookings.component';
 
 export const routes: Routes = [
@@ -18,23 +19,33 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'manage-users', component: ManageUsersComponent },
-  { path: 'manage-rooms', component: ManageRoomsComponent },
-  { path: 'manage-bookings', component: ManageBookingsComponent },
+  // { path: 'manage-users', component: ManageUsersComponent },
+  // { path: 'manage-rooms', component: ManageRoomsComponent },
+  // {
+  //   path: 'dashboard/admin/manage-bookings',
+  //   component: ManageBookingsComponent,
+  // },
+  { path: 'dashboard', component: DashboardComponent },
 
   {
-    path: 'admin',
+    path: 'dashboard/admin',
     component: AdminPageComponent,
     canActivate: [AuthGuard],
     data: { role: 'admin' },
+    children: [
+      { path: 'manage-users', component: ManageUsersComponent },
+      { path: 'manage-rooms', component: ManageRoomsComponent },
+      { path: 'manage-bookings', component: ManageBookingsComponent },
+    ],
   },
   {
-    path: 'manager',
+    path: 'dashboard/manager',
     component: ManagerPageComponent,
     canActivate: [AuthGuard],
+    // data: { role: 'admin' },
     data: { role: 'manager' },
   },
-  { path: '**', redirectTo: '/home', pathMatch: 'full' },
+  // { path: '**', redirectTo: '/home', pathMatch: 'full' },
 ];
 
 @NgModule({

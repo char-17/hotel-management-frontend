@@ -2,3 +2,10 @@ w.form-group{
   display: flex;
   flex-direction: column;
 }
+.login-background {
+  background-image: url('https://images.unsplash.com/photo-1529429611270-8150f418b07b?auto=format&fit=crop&w=1470&q=80');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}

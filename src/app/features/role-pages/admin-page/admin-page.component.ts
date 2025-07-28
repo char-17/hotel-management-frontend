@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { NgClass, NgOptimizedImage } from '@angular/common';
+import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { NgClass } from '@angular/common';
 import {
   MatCard,
   MatCardAvatar,
-  MatCardContent,
   MatCardHeader,
   MatCardSubtitle,
   MatCardTitle,
 } from '@angular/material/card';
-import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.service';
 
@@ -22,14 +20,13 @@ import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.
     RouterLink,
     NgClass,
     MatCard,
-    MatCardContent,
-    NgOptimizedImage,
     MatCardHeader,
-    MatIcon,
     MatCardTitle,
     MatCardSubtitle,
     MatCardAvatar,
     MatTooltip,
+    RouterOutlet,
+    RouterModule,
   ],
 })
 export class AdminPageComponent {

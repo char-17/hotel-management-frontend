@@ -1,12 +1,12 @@
 <div>
   <div class="sticky top-0 bg-red-900 text-white flex items-center justify-between p-4 z-50 shadow-md">
     <div class="text-lg font-semibold">
-      <a routerLink="/admin">Hotel Management</a>
+      <a routerLink="dashboard/admin">Hotel Management</a>
     </div>
     <div class="hidden md:flex space-x-4">
-      <a routerLink="/manage-users" class="hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
-      <a routerLink="/manage-rooms" class="hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
-      <a routerLink="/manage-bookings" class="hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
+      <a routerLink="/dashboard/admin/manage-users" class="hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
+      <a routerLink="/dashboard/admin/manage-rooms" class="hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
+      <a routerLink="/dashboard/admin/manage-bookings" class="hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
       <a routerLink="/login" class="hover:underline hover:text-orange-500 transition duration-300">Login</a>
     </div>
     <button class="md:hidden" (click)="menuService.toggleMenu()">
@@ -16,16 +16,16 @@
     </button>
   </div>
   <div [ngClass]="{ 'block': menuService.isMenuOpen, 'hidden': !menuService.isMenuOpen }" class="md:hidden bg-orange-900 text-white p-4 space-y-2">
-    <a routerLink="/manage-users" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
-    <a routerLink="/manage-rooms" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
-    <a routerLink="/manage-bookings" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
+    <a routerLink="/dashboard/admin/manage-users" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
+    <a routerLink="/dashboard/admin/manage-rooms" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
+    <a routerLink="/dashboard/admin/manage-bookings" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
   </div>
   <div>
     <h2>This is the title of the admin page </h2>
   </div>
   <div class="flex items-center justify-center min-h-52 p-4">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-      <a routerLink="/manage-users" class="hover:text-orange-500 transition duration-300">
+      <a routerLink="/dashboard/admin/manage-users" class="hover:text-orange-500 transition duration-300">
         <div>
           <mat-card class="manage-users hover:bg-lightgrey" matTooltip="Info about the action">
             <mat-card-header>
@@ -36,7 +36,7 @@
           </mat-card>
         </div>
       </a>
-      <a routerLink="/manage-rooms" class="hover:text-orange-500 transition duration-300">
+      <a routerLink="/dashboard/admin/manage-rooms" class="hover:text-orange-500 transition duration-300">
         <div>
           <mat-card class="manage-rooms hover:bg-lightgrey">
             <mat-card-header>
@@ -47,7 +47,7 @@
           </mat-card>
         </div>
       </a>
-      <a routerLink="/manage-bookings" class="hover:text-orange-500 transition duration-300">
+      <a routerLink="/dashboard/admin/manage-bookings" class="hover:text-orange-500 transition duration-300">
         <div>
           <mat-card class="manage-bookings hover:bg-lightgrey">
             <mat-card-header>
@@ -61,3 +61,4 @@
     </div>
   </div>
 </div>
+<router-outlet></router-outlet>
