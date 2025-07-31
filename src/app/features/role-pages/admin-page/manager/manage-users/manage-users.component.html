@@ -2,121 +2,189 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>HotelManagement</title>
+  <title>User Management</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!--  <link rel="icon" type="image/x-icon" href="assets/icons/favicon/favicon.ico">-->
-  <!-- Add this line to load the Material Icons font -->
+  <link
+    href="[https://fonts.googleapis.com/icon?family=Material+Icons](https://fonts.googleapis.com/icon?family=Material+Icons)"
+    rel="stylesheet">
+  <link
+    href="[https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css](https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css)"
+    rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Add Tailwind CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50 min-h-screen w-full">
+<div class="mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
+    <mat-icon class="mr-2 text-blue-600">people</mat-icon>
+    User Management
+  </h1>
 
-<!--<app-admin-page></app-admin-page>-->
-<div class="container mx-auto p-4">
-  <form [formGroup]="userForm" autocomplete="off">
-    <ng-container formArrayName="userRows">
-      <div class="overflow-x-auto">
-        <table mat-table [dataSource]="dataSource"
-               class="mat-elevation-z8 min-w-full sm:min-w-full md:min-w-full lg:min-w-full xl:min-w-full w-full">
+  <mat-card class="shadow-lg overflow-hidden" [hidden]="isLoading">
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">ID</th>
+          <td mat-cell *matCellDef="let user" class="py-3 px-4">{{ user.id }}</td>
+        </ng-container>
 
-<!--          &lt;!&ndash; ID Column &ndash;&gt;-->
-<!--          <ng-container matColumnDef="id">-->
-<!--            <th mat-header-cell *matHeaderCellDef class="W-1/8 p-2 text-left">ID</th>-->
-<!--            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">-->
-<!--              <mat-form-field class="w-" appearance="fill">-->
-<!--                <input matInput type="text" formControlName="id" readonly/>-->
-<!--              </mat-form-field>-->
-<!--            </td>-->
-<!--          </ng-container>-->
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Username</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <input *ngIf="editingIndex === i"
+                   [(ngModel)]="user.username"
+                   class="editable-field">
+            <span *ngIf="editingIndex !== i" class="static-field">{{ user.username }}</span>
+          </td>
+        </ng-container>
 
-          <!-- ID Column -->
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef class="W-1/12 p-2 text-left ">ID</th>
-            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
-              <mat-form-field class="id-column" appearance="fill">
-                <input matInput formControlName="id" readonly />
-              </mat-form-field>
-            </td>
-          </ng-container>
+        <ng-container matColumnDef="password">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Password</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <div class="flex items-center w-full">
+              <div class="flex-grow">
+                <input *ngIf="editingIndex === i"
+                                            [type]="showPassword[i] ? 'text' : 'password'"
+                                            [(ngModel)]="user.password"
+                                            class="editable-field">
+                <span *ngIf="editingIndex !== i"
+                      class="static-field">{{ showPassword[i] ? user.password : '••••••' }}</span>
+              </div>
 
-
-          <!-- Username Column -->
-          <ng-container matColumnDef="username">
-            <th mat-header-cell *matHeaderCellDef class="p-2 text-left">Username</th>
-            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
-              <mat-form-field class="w-full">
-                <input matInput type="text" formControlName="username"
-                       [readonly]="!(userRows.at(i).get('isEditable')?.value)"/>
-              </mat-form-field>
-            </td>
-          </ng-container>
-
-          <!-- Password Column -->
-          <ng-container matColumnDef="password">
-            <th mat-header-cell *matHeaderCellDef class="p-2 text-left">Password</th>
-            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
-              <mat-form-field class="w-full">
-                <input [type]="showPassword[i] ? 'text' : 'password'"
-                       matInput formControlName="password"
-                       [readonly]="!(userRows.at(i).get('isEditable')?.value)"/>
-                <button mat-icon-button matSuffix (click)="togglePasswordVisibility(i)">
-                  <mat-icon>{{ showPassword[i] ? 'visibility' : 'visibility_off' }}</mat-icon>
-                </button>
-              </mat-form-field>
-            </td>
-          </ng-container>
-
-          <!-- Actions Column -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef class="p-2 text-left">Actions</th>
-            <td mat-cell *matCellDef="let element; let i = index" [formGroupName]="i" class="p-2">
-              <button mat-icon-button matTooltip="Save Changes" (click)="saveUser(i)"
-                      *ngIf="userRows.at(i).get('isEditable')?.value" color="primary">
-                <mat-icon>save</mat-icon>
+              <button mat-icon-button (click)="togglePassword(i)"
+                      class="ml-2 action-button text-gray-600 hover:text-blue-600">
+                <mat-icon>{{ showPassword[i] ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
-              <button mat-icon-button matTooltip="Cancel Changes" color="warn"
-                      (click)="cancelEdit(i)" *ngIf="userRows.at(i).get('isEditable')?.value">
-                <mat-icon>cancel</mat-icon>
-              </button>
-              <button mat-icon-button matTooltip="Edit" color="primary"
-                      (click)="editUser(i)" *ngIf="!(userRows.at(i).get('isEditable')?.value)">
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="firstName">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">First Name</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <input *ngIf="editingIndex === i"
+                   [(ngModel)]="user.firstName"
+                   class="editable-field">
+            <span *ngIf="editingIndex !== i" class="static-field">{{ user.firstName }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastName">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Last Name</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <input *ngIf="editingIndex === i"
+                   [(ngModel)]="user.lastName"
+                   class="editable-field">
+            <span *ngIf="editingIndex !== i" class="static-field">{{ user.lastName }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Email</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <input *ngIf="editingIndex === i"
+                   [(ngModel)]="user.email"
+                   class="editable-field">
+            <span *ngIf="editingIndex !== i" class="static-field">{{ user.email }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Gender</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <input *ngIf="editingIndex === i"
+                   [(ngModel)]="user.gender"
+                   class="editable-field">
+            <span *ngIf="editingIndex !== i" class="static-field">{{ user.gender }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateOfBirth">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Date of Birth</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <input *ngIf="editingIndex === i"
+                   [(ngModel)]="user.dateOfBirth"
+                   class="editable-field">
+            <span *ngIf="editingIndex !== i" class="static-field">{{ user.dateOfBirth | date }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Role</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <input *ngIf="editingIndex === i"
+                   [(ngModel)]="user.role"
+                   class="editable-field">
+            <span *ngIf="editingIndex !== i" class="static-field">{{ user.role }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold w-40">Actions</th>
+          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
+            <div class="flex space-x-2 justify-center">
+              <button *ngIf="editingIndex !== i"
+                      mat-icon-button
+                      color="primary"
+                      (click)="editUser(i)"
+                      matTooltip="Edit"
+                      class="action-button">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button matTooltip="Delete" color="warn"
-                      (click)="deleteUser(i)" *ngIf="!(userRows.at(i).get('isEditable')?.value)">
+
+              <button *ngIf="editingIndex === i"
+                      mat-icon-button
+                      color="primary"
+                      (click)="saveUser(i)"
+                      matTooltip="Save"
+                      class="action-button">
+                <mat-icon>save</mat-icon>
+              </button>
+
+              <button *ngIf="editingIndex === i"
+                      mat-icon-button
+                      (click)="cancelEdit()"
+                      matTooltip="Cancel"
+                      class="action-button text-gray-600 hover:text-red-600">
+                <mat-icon>cancel</mat-icon>
+              </button>
+
+              <button mat-icon-button
+                      color="warn"
+                      (click)="deleteUser(i)"
+                      matTooltip="Delete"
+                      class="action-button">
                 <mat-icon>delete</mat-icon>
               </button>
-            </td>
-          </ng-container>
+            </div>
+          </td>
+        </ng-container>
 
-          <!-- Table Rows -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </div>
-    </ng-container>
-  </form>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="h-12"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            [class.bg-blue-50]="editingIndex !== null && editingIndex === row.index"
+            class="hover:bg-gray-50 transition-colors"></tr>
+      </table>
+    </div>
 
-  <!-- Loading Spinner -->
-  <mat-card *ngIf="isLoading" class="flex justify-center items-center mt-4">
-    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                   showFirstLastButtons
+                   class="border-t "
+                   aria-label="Select page of users">
+    </mat-paginator>
   </mat-card>
 
-  <!-- Paginator -->
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
-</div>
-<div class="container mx-auto pl-4">
-  <button mat-raised-button color="primary"
-          (click)="addNewUser()"
-          class="mb-4"
-          [disabled]="!canAddNewUser">
-    <mat-icon>add</mat-icon>
-    Add New User
-  </button>
+  <div *ngIf="isLoading" class="flex flex-col items-center justify-center mt-16">
+    <mat-spinner diameter="64" class="mb-4"></mat-spinner>
+    <p class="text-lg text-gray-600">Loading users data...</p>
+  </div>
 </div>
 
+<div class="fixed bottom-4 right-4">
+  <button mat-fab color="primary" (click)="loadUsers()" matTooltip="Refresh data">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
 </body>
 </html>

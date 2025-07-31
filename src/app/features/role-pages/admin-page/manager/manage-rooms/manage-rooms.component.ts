@@ -1,10 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatCell,
   MatCellDef,
@@ -19,9 +14,15 @@ import {
   MatTableDataSource,
 } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { AdminPageComponent } from '../../admin-page.component';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { MatCard } from '@angular/material/card';
+import { MatSort } from '@angular/material/sort';
+import { NgIf } from '@angular/common';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { Room, RoomService } from './room.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-manage-rooms',
@@ -29,194 +30,160 @@ import { MatInput } from '@angular/material/input';
   styleUrl: './manage-rooms.component.css',
   standalone: true,
   imports: [
-    AdminPageComponent,
+    ReactiveFormsModule,
+    MatIcon,
+    MatCard,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
     MatCell,
     MatCellDef,
-    MatColumnDef,
-    MatFormField,
-    MatHeaderCell,
+    NgIf,
+    FormsModule,
+    MatIconButton,
+    MatTooltip,
     MatHeaderRow,
     MatHeaderRowDef,
-    MatInput,
     MatRow,
     MatRowDef,
-    MatTable,
-    ReactiveFormsModule,
-    MatHeaderCellDef,
+    MatPaginator,
+    MatProgressSpinner,
+    MatFabButton,
   ],
 })
 export class ManageRoomsComponent implements OnInit {
-  roomForm: FormGroup;
-  dataSource: MatTableDataSource<any>;
   displayedColumns: string[] = [
-    'roomId',
+    'id',
     'roomNumber',
+    'roomType',
+    'capacity',
     'roomPrice',
     'roomStatus',
-    'roomType',
-    'roomCapacity',
     'actions',
   ];
 
-  isLoading = false;
-  pageNumber = 0;
+  dataSource = new MatTableDataSource<Room>();
+  isLoading = true;
+  editingIndex: number | null = null;
+  originalRoom: Room | null = null; // Для хранения оригинальных данных при редактировании
 
-  constructor(private fb: FormBuilder) {
-    this.roomForm = this.fb.group({
-      roomRows: this.fb.array([]),
-    });
-    this.dataSource = new MatTableDataSource();
-  }
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  constructor(private roomService: RoomService) {}
 
   ngOnInit() {
     this.loadRooms();
   }
 
-  get roomRows() {
-    return this.roomForm.get('roomRows') as FormArray;
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  loadRooms() {
-    const rooms = [
-      {
-        roomId: '1',
-        roomNumber: '101',
-        roomPrice: 100,
-        roomStatus: 'Available',
-        roomType: 'Single',
-        roomCapacity: 1,
-      },
-      {
-        roomId: '2',
-        roomNumber: '102',
-        roomPrice: 150,
-        roomStatus: 'Occupied',
-        roomType: 'Double',
-        roomCapacity: 2,
-      },
-      {
-        roomId: '3',
-        roomNumber: '103',
-        roomPrice: 200,
-        roomStatus: 'Available',
-        roomType: 'Suite',
-        roomCapacity: 4,
-      },
-      {
-        roomId: '4',
-        roomNumber: '104',
-        roomPrice: 250,
-        roomStatus: 'Occupied',
-        roomType: 'Single',
-        roomCapacity: 1,
-      },
-      {
-        roomId: '5',
-        roomNumber: '105',
-        roomPrice: 300,
-        roomStatus: 'Available',
-        roomType: 'Double',
-        roomCapacity: 2,
-      },
-      {
-        roomId: '6',
-        roomNumber: '106',
-        roomPrice: 350,
-        roomStatus: 'Under Maintenance',
-        roomType: 'Suite',
-        roomCapacity: 4,
-      },
-      {
-        roomId: '7',
-        roomNumber: '107',
-        roomPrice: 400,
-        roomStatus: 'Available',
-        roomType: 'Single',
-        roomCapacity: 1,
-      },
-      {
-        roomId: '8',
-        roomNumber: '108',
-        roomPrice: 450,
-        roomStatus: 'Occupied',
-        roomType: 'Double',
-        roomCapacity: 2,
-      },
-      {
-        roomId: '9',
-        roomNumber: '109',
-        roomPrice: 500,
-        roomStatus: 'Available',
-        roomType: 'Suite',
-        roomCapacity: 4,
-      },
-    ];
-
-    rooms.forEach((room) => this.addRoomRow(room));
-    this.dataSource.data = this.roomRows.controls;
+  loadRooms(): void {
+    this.isLoading = true;
+    this.roomService
+      .getRooms()
+      .pipe(
+        catchError((error) => {
+          console.error('Error while loading rooms:', error);
+          this.isLoading = false;
+          return of([]); // Возвращаем пустой массив в случае ошибки
+        }),
+      )
+      .subscribe((rooms) => {
+        this.dataSource.data = rooms;
+        this.isLoading = false;
+      });
   }
 
-  addRoomRow(room: {
-    roomId: string;
-    roomNumber: string;
-    roomPrice: number;
-    roomStatus: string;
-    roomType: string;
-    roomCapacity: number;
-  }) {
-    const row: FormGroup = this.fb.group({
-      roomId: [room.roomId],
-      roomNumber: [room.roomNumber],
-      roomPrice: [room.roomPrice],
-      roomStatus: [room.roomStatus],
-      roomType: [room.roomType],
-      roomCapacity: [room.roomCapacity],
-    });
-    this.roomRows.push(row);
+  editRoom(index: number): void {
+    this.editingIndex = index;
+    // Клонируем объект для возможности отмены изменений
+    this.originalRoom = { ...this.dataSource.data[index] };
   }
 
-  editRoom(index: number) {
-    const row = this.roomRows.at(index);
-    if (row) {
-      row.get('IsEditable')?.setValue(true);
+  saveRoom(index: number): void {
+    if (this.editingIndex === index) {
+      const roomToSave = this.dataSource.data[index];
+      // Проверка на undefined для id
+      if (roomToSave.id === undefined) {
+        console.error(
+          'Ошибка: ID комнаты для сохранения не определен.',
+          roomToSave,
+        );
+        alert('Невозможно сохранить комнату: ID не определен.');
+        this.cancelEdit();
+        return;
+      }
+
+      this.roomService
+        .updateRoom(roomToSave.id, roomToSave)
+        .pipe(
+          catchError((error) => {
+            console.error('Ошибка при сохранении комнаты:', error);
+            if (this.originalRoom) {
+              this.dataSource.data[index] = this.originalRoom;
+              this.dataSource._updateChangeSubscription();
+            }
+            alert(
+              'Не удалось сохранить изменения. Проверьте консоль для деталей.',
+            );
+            this.cancelEdit();
+            return of(roomToSave);
+          }),
+        )
+        .subscribe((updatedRoom) => {
+          console.log('Комната обновлена:', updatedRoom);
+          this.editingIndex = null;
+          this.originalRoom = null;
+        });
     }
   }
 
-  saveRoom(index: number) {
-    const row = this.roomRows.at(index);
-    if (row) {
-      row.get('IsEditable')?.setValue(false);
+  cancelEdit(): void {
+    if (this.editingIndex !== null && this.originalRoom) {
+      this.dataSource.data[this.editingIndex] = this.originalRoom;
+      this.dataSource._updateChangeSubscription(); // Обновляем таблицу
     }
+    this.editingIndex = null;
+    this.originalRoom = null;
   }
 
-  cancelEdit(index: number) {
-    const row = this.roomRows.at(index);
-    if (row) {
-      row.get('IsEditable')?.setValue(false);
+  deleteRoom(index: number): void {
+    const roomToDelete = this.dataSource.data[index];
+    // Проверка на undefined для id
+    if (roomToDelete.id === undefined) {
+      console.error(
+        'Ошибка: ID комнаты для удаления не определен.',
+        roomToDelete,
+      );
+      alert('Невозможно удалить комнату: ID не определен.');
+      return;
     }
-  }
 
-  deleteRoom(index: number) {
-    if (this.roomRows.length > 0) {
-      this.roomRows.removeAt(index);
-      this.dataSource.data = this.roomRows.controls;
+    if (
+      confirm(
+        `Вы уверены, что хотите удалить комнату №${roomToDelete.roomNumber}?`,
+      )
+    ) {
+      this.roomService
+        .deleteRoom(roomToDelete.id)
+        .pipe(
+          catchError((error) => {
+            console.error('Ошибка при удалении комнаты:', error);
+            alert('Не удалось удалить комнату. Проверьте консоль для деталей.');
+            return of(null);
+          }),
+        )
+        .subscribe(() => {
+          console.log('Комната удалена:', roomToDelete);
+          this.dataSource.data.splice(index, 1);
+          this.dataSource._updateChangeSubscription();
+        });
     }
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  goToPage() {
-    // Add logic to navigate to the specified page if using pagination
-    // For example:
-    const paginator: MatPaginator = this.dataSource.paginator as MatPaginator;
-    paginator.pageIndex = this.pageNumber - 1;
-    paginator.page.next({
-      pageIndex: paginator.pageIndex,
-      pageSize: paginator.pageSize,
-      length: paginator.length,
-    });
   }
 }

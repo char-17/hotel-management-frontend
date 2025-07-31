@@ -3,12 +3,25 @@
   width: 50px; /* Adjust this value as needed */
 }
 
-.id-column .mat-form-field-wrapper {
-  padding-right: 0; /* Optional: Remove extra padding */
-}
+
 
 /*Id Username Password Action font bold and text size */
 th{
   font-weight: bold;
   font-size: large;
 }
+
+
+.editable-field {
+  @apply w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+.static-field {
+  @apply truncate;
+}
+.action-button {
+  @apply transition-all duration-200 hover:scale-110;
+}
+.error-snackbar {
+  @apply bg-red-500 text-white;
+}
+

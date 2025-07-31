@@ -1,11 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import {
   MatCell,
   MatCellDef,
@@ -19,166 +14,148 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { User, UserService } from './user-service.service';
+import { finalize } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCard } from '@angular/material/card';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { FormsModule } from '@angular/forms';
+import { DatePipe, NgIf } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatFormField, MatSuffix } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { AdminPageComponent } from '../../admin-page.component';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-manage-users',
   templateUrl: './manage-users.component.html',
-  styleUrls: ['./manage-users.component.css'],
   standalone: true,
+  styleUrls: ['./manage-users.component.css'],
   imports: [
     MatCard,
-    MatProgressSpinner,
+    MatTable,
+    MatSort,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    FormsModule,
+    NgIf,
+    MatIcon,
+    MatCell,
+    MatIconButton,
     MatPaginator,
+    MatProgressSpinner,
     MatHeaderRow,
     MatRow,
-    MatHeaderRowDef,
     MatRowDef,
-    MatIcon,
-    MatIconButton,
+    MatHeaderRowDef,
+    DatePipe,
     MatTooltip,
-    ReactiveFormsModule,
-    MatCellDef,
-    MatCell,
-    MatHeaderCellDef,
-    MatHeaderCell,
-    MatColumnDef,
-    MatFormField,
-    MatInput,
-    MatTable,
-    AdminPageComponent,
-    NgIf,
-    MatButton,
-    MatSuffix,
-    // Include the necessary Angular Material and other modules here
+    MatFabButton,
   ],
 })
 export class ManageUsersComponent implements OnInit {
-  userForm: FormGroup;
-  dataSource: MatTableDataSource<any>;
-  displayedColumns: string[] = ['id', 'username', 'password', 'actions'];
-  isLoading = false;
-  canAddNewUser: boolean = true;
-  showPassword: boolean[] = []; // Track password visibility for each row
+  displayedColumns: string[] = [
+    'id',
+    'username',
+    'password',
+    'firstName',
+    'lastName',
+    'email',
+    'gender',
+    'dateOfBirth',
+    'role',
+    'actions',
+  ];
 
-  constructor(private fb: FormBuilder) {
-    this.userForm = this.fb.group({
-      userRows: this.fb.array([]),
-    });
-    this.dataSource = new MatTableDataSource();
-  }
+  dataSource = new MatTableDataSource<User>([]);
+  isLoading = true;
+  editingIndex: number | null = null;
+  originalUser: User | null = null;
+  showPassword: boolean[] = [];
 
-  ngOnInit() {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  constructor(
+    private userService: UserService,
+    private snackBar: MatSnackBar,
+  ) {}
+
+  ngOnInit(): void {
     this.loadUsers();
   }
 
-  // Getter to access the FormArray
-  get userRows(): FormArray {
-    return this.userForm.get('userRows') as FormArray;
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  loadUsers() {
-    const users = [
-      { id: '1', username: 'user1', password: 'pass1' },
-      { id: '2', username: 'user2', password: 'pass2' },
-      { id: '3232', username: 'user2', password: 'pass2' },
-      // More users can be added here
-    ];
-
-    users.forEach((user) => this.addUserRow(user));
-    this.updateDataSource();
+  loadUsers(): void {
+    this.isLoading = true;
+    this.userService
+      .getAllUsers()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (users) => {
+          this.dataSource.data = users;
+          this.showPassword = new Array(users.length).fill(false);
+        },
+        error: () => this.showError('Failed to load users'),
+      });
   }
 
-  addUserRow(user: { id: string; username: string; password: string }) {
-    const row = this.fb.group({
-      id: [user.id, Validators.required],
-      username: [user.username, Validators.required],
-      password: [user.password, Validators.required],
-      isEditable: [false],
-    });
-    this.userRows.push(row);
-    this.showPassword.push(false); // Initialize password visibility to false
-    this.updateDataSource();
-  }
-
-  getNextId(): string {
-    const currentIds = this.userRows.controls.map((control) =>
-      parseInt(control.get('id')?.value || '0', 10),
-    );
-    return (Math.max(...currentIds) + 1).toString();
-  }
-
-  addNewUser() {
-    if (this.canAddNewUser) {
-      const newUser = {
-        id: this.getNextId(),
-        username: '',
-        password: '',
-        isEditable: true,
-      };
-      this.addUserRow(newUser);
-      this.canAddNewUser = false; // Disable adding a new user until the current one is filled
-    }
-  }
-
-  editUser(index: number) {
-    const row = this.userRows.at(index) as FormGroup;
-    if (row) {
-      row.get('isEditable')?.setValue(true);
-    }
-  }
-
-  saveUser(index: number) {
-    const row = this.userRows.at(index) as FormGroup;
-    if (row && this.isRowValid(row)) {
-      row.get('isEditable')?.setValue(false);
-      this.canAddNewUser = true; // Re-enable adding a new user after saving
-    } else {
-      alert('Please fill in all fields before saving.');
-    }
-  }
-
-  cancelEdit(index: number) {
-    const row = this.userRows.at(index) as FormGroup;
-    if (row) {
-      row.get('isEditable')?.setValue(false);
-      this.canAddNewUser = true; // Re-enable adding a new user after canceling
-    }
-  }
-
-  deleteUser(index: number) {
-    if (this.userRows.length > 0) {
-      this.userRows.removeAt(index);
-      this.showPassword.splice(index, 1); // Remove password visibility tracking for deleted row
-      this.updateDataSource();
-      this.canAddNewUser = true; // Re-enable adding a new user after deletion
-    }
-  }
-
-  isRowValid(row: FormGroup): boolean {
-    return (
-      row.get('id')?.value &&
-      row.get('username')?.value &&
-      row.get('password')?.value
-    );
-  }
-
-  updateDataSource() {
-    this.dataSource.data = this.userRows.controls.map(
-      (control) => control.value,
-    );
-  }
-
-  togglePasswordVisibility(index: number): void {
+  togglePassword(index: number): void {
     this.showPassword[index] = !this.showPassword[index];
+  }
+
+  editUser(index: number): void {
+    this.editingIndex = index;
+    this.originalUser = { ...this.dataSource.data[index] };
+  }
+
+  saveUser(index: number): void {
+    const user = this.dataSource.data[index];
+    this.userService.updateUser(user).subscribe({
+      next: () => {
+        this.editingIndex = null;
+        this.showSuccess('User updated successfully');
+      },
+      error: () => this.showError('Failed to update user'),
+    });
+  }
+
+  cancelEdit(): void {
+    if (this.originalUser && this.editingIndex !== null) {
+      this.dataSource.data[this.editingIndex] = this.originalUser;
+      this.dataSource._updateChangeSubscription();
+    }
+    this.editingIndex = null;
+  }
+
+  deleteUser(index: number): void {
+    const user = this.dataSource.data[index];
+    if (confirm(`Delete user ${user.username}?`)) {
+      this.userService.deleteUser(user.id!).subscribe({
+        next: () => {
+          this.dataSource.data.splice(index, 1);
+          this.dataSource._updateChangeSubscription();
+          this.showPassword.splice(index, 1);
+          this.showSuccess('User deleted successfully');
+        },
+        error: () => this.showError('Failed to delete user'),
+      });
+    }
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Close', { duration: 3000 });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: ['error-snackbar'],
+    });
   }
 }
