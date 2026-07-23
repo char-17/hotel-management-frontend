@@ -9,11 +9,10 @@ import {
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-custom-dialog',
-  templateUrl: './custom-dialog.component.html',
-  styleUrl: './custom-dialog.component.css',
-  standalone: true,
-  imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButton],
+    selector: 'app-custom-dialog',
+    templateUrl: './custom-dialog.component.html',
+    styleUrl: './custom-dialog.component.css',
+    imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButton]
 })
 export class CustomDialogComponent implements OnInit {
   constructor(

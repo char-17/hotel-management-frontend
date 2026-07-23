@@ -5,12 +5,11 @@ import { NgForOf } from '@angular/common';
 import { NavToolbarComponent } from '../../shared/navbar/nav-toolbar/nav-toolbar.component';
 
 @Component({
-  selector: 'app-bookings',
-  templateUrl: './bookings.component.html',
-  standalone: true,
-  styleUrls: ['./bookings.component.css'],
-  imports: [NgForOf, NavToolbarComponent],
-  providers: [],
+    selector: 'app-bookings',
+    templateUrl: './bookings.component.html',
+    styleUrls: ['./bookings.component.css'],
+    imports: [NgForOf, NavToolbarComponent],
+    providers: []
 })
 export class BookingsComponent implements OnInit {
   bookings: Booking[] = [];

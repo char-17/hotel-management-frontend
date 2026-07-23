@@ -10,26 +10,25 @@ import { NgClass, NgIf } from '@angular/common';
 import { AdminPageComponent } from '../../../features/role-pages/admin-page/admin-page.component';
 
 @Component({
-  selector: 'nav-toolbar',
-  templateUrl: './nav-toolbar.component.html',
-  styleUrl: './nav-toolbar.component.css',
-  standalone: true,
-  imports: [
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
-    FormsModule,
-    MatFormField,
-    MatInput,
-    MatButton,
-    MatLabel,
-    MatToolbar,
-    RouterOutlet,
-    RouterLink,
-    NgClass,
-    NgIf,
-    AdminPageComponent,
-  ],
+    selector: 'nav-toolbar',
+    templateUrl: './nav-toolbar.component.html',
+    styleUrl: './nav-toolbar.component.css',
+    imports: [
+        MatCard,
+        MatCardTitle,
+        MatCardContent,
+        FormsModule,
+        MatFormField,
+        MatInput,
+        MatButton,
+        MatLabel,
+        MatToolbar,
+        RouterOutlet,
+        RouterLink,
+        NgClass,
+        NgIf,
+        AdminPageComponent,
+    ]
 })
 export class NavToolbarComponent {
   isMenuOpen = false;

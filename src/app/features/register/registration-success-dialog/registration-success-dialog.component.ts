@@ -10,17 +10,16 @@ import {
 import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-registration-success-dialog',
-  standalone: true,
-  imports: [
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogTitle,
-    MatButton,
-    MatDialogClose,
-  ],
-  templateUrl: './registration-success-dialog.component.html',
-  styleUrls: ['./registration-success-dialog.component.css'],
+    selector: 'app-registration-success-dialog',
+    imports: [
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogTitle,
+        MatButton,
+        MatDialogClose,
+    ],
+    templateUrl: './registration-success-dialog.component.html',
+    styleUrls: ['./registration-success-dialog.component.css']
 })
 export class RegistrationSuccessDialogComponent {
   constructor(

@@ -10,22 +10,19 @@ import { LoginResponse } from './interfaces/login-response';
 import { LoginRequest } from './interfaces/login-request';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-
-  imports: [
-    MatCard,
-    MatCardTitle,
-    MatCardContent,
-    FormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    NavToolbarComponent,
-  ],
-
-  standalone: true,
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    imports: [
+        MatCard,
+        MatCardTitle,
+        MatCardContent,
+        FormsModule,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        NavToolbarComponent,
+    ]
 })
 export class LoginComponent {
   user = { username: '', password: '' };

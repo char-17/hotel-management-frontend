@@ -14,24 +14,23 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-manager-page',
-  templateUrl: './manager-page.component.html',
-  styleUrl: './manager-page.component.css',
-  standalone: true,
-  imports: [
-    RouterLink,
-    NgClass,
-    MatCard,
-    MatCardContent,
-    NgOptimizedImage,
-    MatCardHeader,
-    MatIcon,
-    MatCardTitle,
-    MatCardSubtitle,
-    MatCardAvatar,
-    MatTooltip,
-    MatIconModule,
-  ],
+    selector: 'app-manager-page',
+    templateUrl: './manager-page.component.html',
+    styleUrl: './manager-page.component.css',
+    imports: [
+        RouterLink,
+        NgClass,
+        MatCard,
+        MatCardContent,
+        NgOptimizedImage,
+        MatCardHeader,
+        MatIcon,
+        MatCardTitle,
+        MatCardSubtitle,
+        MatCardAvatar,
+        MatTooltip,
+        MatIconModule,
+    ]
 })
 export class ManagerPageComponent {
   constructor(protected menuService: MenuService) {}

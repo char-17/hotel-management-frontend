@@ -13,24 +13,23 @@ import { NgIf } from '@angular/common';
 import { NavToolbarComponent } from '../../../shared/navbar/nav-toolbar/nav-toolbar.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatCardModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatRadioModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgIf,
-    NavToolbarComponent,
-  ],
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrl: './home.component.css',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCardModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatRadioModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgIf,
+        NavToolbarComponent,
+    ]
 })
 export class HomeComponent {}
