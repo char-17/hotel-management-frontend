@@ -19,7 +19,7 @@ import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCard } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe, formatDate, NgIf } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -111,17 +111,29 @@ export class ManageUsersComponent implements OnInit {
 
   editUser(index: number): void {
     this.editingIndex = index;
-    this.originalUser = { ...this.dataSource.data[index] };
+    this.originalUser = { ...this.dataSource.data[index] }; // his is the copy of user data before changes(edit)
   }
 
   saveUser(index: number): void {
     const user = this.dataSource.data[index];
-    this.userService.updateUser(user).subscribe({
+    const formattedUser: User = {
+      ...user,
+      dateOfBirth: formatDate(user.dateOfBirth, 'yyyy-MM-dd', 'en-US'),
+    };
+    this.userService.updateUser(formattedUser).subscribe({
       next: () => {
         this.editingIndex = null;
         this.showSuccess('User updated successfully');
       },
-      error: () => this.showError('Failed to update user'),
+      error: (error) => {
+        if (error.status === 400 && error.error?.includes('username')) {
+          this.showError('User with such username already exists');
+        } else if (error.status === 404) {
+          this.showError('User not found');
+        } else {
+          this.showError('User update error');
+        }
+      },
     });
   }
 

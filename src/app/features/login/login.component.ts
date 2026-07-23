@@ -50,7 +50,7 @@ export class LoginComponent {
       next: (response: LoginResponse) => {
         if (response.loginStatus) {
           alert('Login Success!');
-          this.router.navigate(['/dashboard']); // или другой путь
+          this.router.navigate(['/dashboard/']); // или другой путь
         } else {
           alert('Incorrect username or password !');
         }

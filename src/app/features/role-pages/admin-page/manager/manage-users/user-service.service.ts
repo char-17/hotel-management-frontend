@@ -17,7 +17,7 @@ export interface User {
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly apiUrl = `${environment.apiUrl}/get-all-users`;
+  private readonly apiUrl = `${environment.apiUrl}/users`;
 
   constructor(private http: HttpClient) {}
 

@@ -23,7 +23,7 @@
 
   <mat-card class="shadow-lg overflow-hidden" [hidden]="isLoading">
     <div class="overflow-x-auto">
-      <table mat-table [dataSource]="dataSource" matSort class="w-full">
+      <table mat-table [dataSource]="dataSource" matSort class="w-full justify-center">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">ID</th>
           <td mat-cell *matCellDef="let user" class="py-3 px-4">{{ user.id }}</td>
@@ -104,6 +104,7 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Date of Birth</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             <input *ngIf="editingIndex === i"
+                   type="date"
                    [(ngModel)]="user.dateOfBirth"
                    class="editable-field">
             <span *ngIf="editingIndex !== i" class="static-field">{{ user.dateOfBirth | date }}</span>
@@ -120,7 +121,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
+        <ng-container matColumnDef="actions" >
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold w-40">Actions</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             <div class="flex space-x-2 justify-center">
