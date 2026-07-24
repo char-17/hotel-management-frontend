@@ -1,15 +1,19 @@
 <div>
-  <!-- Navigation Bar -->
+  <!-- Navigation Bar — matches admin page pattern with manager-specific links -->
   <div class="sticky top-0 bg-red-400 text-white flex items-center justify-between p-4 z-50 shadow-md">
     <div class="text-lg font-semibold">
-      <a routerLink="/admin">Hotel Management</a>
+      <a routerLink="/dashboard/manager">Hotel Management</a>
     </div>
     <!-- Desktop Menu -->
     <div class="hidden md:flex space-x-4">
-      <a class="hover:text-gray-800 transition duration-300">Arrivals</a>
-      <a class="hover:text-gray-800 transition duration-300">Availability</a>
-      <a class="hover:text-gray-800 transition duration-300">Reservations</a>
-      <a class="hover:text-gray-800 transition duration-300">Login</a>
+      <a routerLink="/dashboard/manager/manage-reservations" class="hover:underline hover:text-orange-500 transition duration-300">Reservations</a>
+      <a routerLink="/dashboard/manager/manage-guests" class="hover:underline hover:text-orange-500 transition duration-300">Guests</a>
+      <a routerLink="/dashboard/manager/manage-housekeeping" class="hover:underline hover:text-orange-500 transition duration-300">Housekeeping</a>
+      <a routerLink="/dashboard/manager/manage-staff" class="hover:underline hover:text-orange-500 transition duration-300">Staff</a>
+      <a routerLink="/dashboard/manager/manage-employees" class="hover:underline hover:text-orange-500 transition duration-300">Employees</a>
+      <a routerLink="/dashboard/manager/manage-invoices" class="hover:underline hover:text-orange-500 transition duration-300">Invoices</a>
+      <a routerLink="/dashboard/manager/manage-payments" class="hover:underline hover:text-orange-500 transition duration-300">Payments</a>
+      <a routerLink="/login" class="hover:underline hover:text-orange-500 transition duration-300">Login</a>
     </div>
     <!-- Mobile Menu Button -->
     <button class="md:hidden" (click)="menuService.toggleMenu()">
@@ -21,71 +25,116 @@
   <!-- Mobile Menu -->
   <div [ngClass]="{ 'block': menuService.isMenuOpen, 'hidden': !menuService.isMenuOpen }"
        class="md:hidden bg-gray-700 text-white p-4 space-y-2">
-    <a routerLink="/arrivals" class="block hover:text-orange-500 transition duration-300">Arrivals</a>
-    <a routerLink="/availability" class="block  hover:text-orange-500 transition duration-300">Availability</a>
-    <a routerLink="/reservations" class="block  hover:text-orange-500 transition duration-300">Reservations</a>
+    <a routerLink="/dashboard/manager/manage-reservations" class="block hover:text-orange-500 transition duration-300">Reservations</a>
+    <a routerLink="/dashboard/manager/manage-guests" class="block hover:text-orange-500 transition duration-300">Guests</a>
+    <a routerLink="/dashboard/manager/manage-housekeeping" class="block hover:text-orange-500 transition duration-300">Housekeeping</a>
+    <a routerLink="/dashboard/manager/manage-staff" class="block hover:text-orange-500 transition duration-300">Staff</a>
+    <a routerLink="/dashboard/manager/manage-employees" class="block hover:text-orange-500 transition duration-300">Employees</a>
+    <a routerLink="/dashboard/manager/manage-invoices" class="block hover:text-orange-500 transition duration-300">Invoices</a>
+    <a routerLink="/dashboard/manager/manage-payments" class="block hover:text-orange-500 transition duration-300">Payments</a>
   </div>
+
   <div>
-    <h2>This is the title of the manager page </h2>
+    <h2>Manager Dashboard</h2>
   </div>
-  <!-- Main Content -->
+
+  <!-- Main Content — card grid linking to each management sub-page -->
   <div class="flex items-center justify-center min-h-52 p-4">
-    <!-- Responsive Grid for Mat-Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-      <div>
-        <mat-card class="manage-users hover:bg-lightgrey" matTooltip="Info about the action">
-          <mat-card-header>
-            <div mat-card-avatar class="arrivals"></div>
-            <mat-card-title>Arrivals</mat-card-title>
-            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-      <div>
-        <mat-card class="manage-rooms hover:bg-lightgrey">
-          <mat-card-header>
-            <div mat-card-avatar class="availability"></div>
-            <mat-card-title>Availability</mat-card-title>
-            <mat-card-subtitle>Room Crud Operations</mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-      <div>
-        <mat-card class="manage-bookings hover:bg-lightgrey">
-          <mat-card-header>
-            <div mat-card-avatar class="reservations"></div>
-            <mat-card-title>Reservations</mat-card-title>
-            <mat-card-subtitle>Booking Crud Operations</mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-      <div>
-        <mat-card class="example-card hover:bg-lightgrey">
-          <mat-card-header>
-            <div mat-card-avatar class="gear-image"></div>
-            <mat-card-title>Manage Users</mat-card-title>
-            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-      <div>
-        <mat-card class="example-card hover:bg-lightgrey">
-          <mat-card-header>
-            <div mat-card-avatar class="gear-image"></div>
-            <mat-card-title>Manage Users</mat-card-title>
-            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-      <div>
-        <mat-card class="example-card hover:bg-lightgrey">
-          <mat-card-header>
-            <div mat-card-avatar class="gear-image"></div>
-            <mat-card-title>Manage Users</mat-card-title>
-            <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
+
+      <!-- Reservations card -->
+      <a routerLink="/dashboard/manager/manage-reservations" class="hover:text-orange-500 transition duration-300">
+        <div>
+          <mat-card class="manage-card hover:bg-lightgrey" matTooltip="Manage hotel reservations">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="card-icon">event</mat-icon>
+              <mat-card-title>Reservations</mat-card-title>
+              <mat-card-subtitle>Reservation CRUD Operations</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </a>
+
+      <!-- Guests card -->
+      <a routerLink="/dashboard/manager/manage-guests" class="hover:text-orange-500 transition duration-300">
+        <div>
+          <mat-card class="manage-card hover:bg-lightgrey" matTooltip="Manage guest profiles">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="card-icon">people</mat-icon>
+              <mat-card-title>Guests</mat-card-title>
+              <mat-card-subtitle>Guest CRUD Operations</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </a>
+
+      <!-- Housekeeping card -->
+      <a routerLink="/dashboard/manager/manage-housekeeping" class="hover:text-orange-500 transition duration-300">
+        <div>
+          <mat-card class="manage-card hover:bg-lightgrey" matTooltip="Manage housekeeping tasks">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="card-icon">cleaning_services</mat-icon>
+              <mat-card-title>Housekeeping</mat-card-title>
+              <mat-card-subtitle>Housekeeping CRUD Operations</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </a>
+
+      <!-- Staff card -->
+      <a routerLink="/dashboard/manager/manage-staff" class="hover:text-orange-500 transition duration-300">
+        <div>
+          <mat-card class="manage-card hover:bg-lightgrey" matTooltip="Manage staff members">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="card-icon">badge</mat-icon>
+              <mat-card-title>Staff</mat-card-title>
+              <mat-card-subtitle>Staff CRUD Operations</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </a>
+
+      <!-- Employees card -->
+      <a routerLink="/dashboard/manager/manage-employees" class="hover:text-orange-500 transition duration-300">
+        <div>
+          <mat-card class="manage-card hover:bg-lightgrey" matTooltip="Manage employees">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="card-icon">engineering</mat-icon>
+              <mat-card-title>Employees</mat-card-title>
+              <mat-card-subtitle>Employee CRUD Operations</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </a>
+
+      <!-- Invoices card -->
+      <a routerLink="/dashboard/manager/manage-invoices" class="hover:text-orange-500 transition duration-300">
+        <div>
+          <mat-card class="manage-card hover:bg-lightgrey" matTooltip="Manage invoices">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="card-icon">receipt_long</mat-icon>
+              <mat-card-title>Invoices</mat-card-title>
+              <mat-card-subtitle>Invoice CRUD Operations</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </a>
+
+      <!-- Payments card -->
+      <a routerLink="/dashboard/manager/manage-payments" class="hover:text-orange-500 transition duration-300">
+        <div>
+          <mat-card class="manage-card hover:bg-lightgrey" matTooltip="Manage payments">
+            <mat-card-header>
+              <mat-icon mat-card-avatar class="card-icon">payments</mat-icon>
+              <mat-card-title>Payments</mat-card-title>
+              <mat-card-subtitle>Payment CRUD Operations</mat-card-subtitle>
+            </mat-card-header>
+          </mat-card>
+        </div>
+      </a>
+
     </div>
   </div>
 </div>
+<!-- Router outlet for child management pages -->
+<router-outlet></router-outlet>

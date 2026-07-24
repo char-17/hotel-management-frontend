@@ -1,5 +1,7 @@
+/* Login response from backend — includes JWT token for authenticating subsequent requests */
 export interface LoginResponse {
   username: string;
-  password: string; // обычно это "found" или другое слово
   loginStatus: boolean;
+  role: string;
+  token: string;
 }

@@ -9,7 +9,8 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class LoginService {
-  private apiUrl = `${environment.apiUrl}/login`;
+  /* Login endpoint: /api/auth/login */
+  private apiUrl = `${environment.apiUrl}/auth/login`;
 
   constructor(private http: HttpClient) {}
 

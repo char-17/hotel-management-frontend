@@ -17,15 +17,14 @@ export class AuthGuard implements CanActivate {
     private dialog: MatDialog,
   ) {}
 
-  //This functions allows or not access to admin and manager page
+  /* Check if the user's role is included in the route's allowed roles list */
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
   ): boolean {
-    const userRole = this.authService.getUserRole; // e.g., 'admin' or 'manager'
-    const requiredRole = route.data['role'];
+    const allowedRoles: string[] = route.data['roles'] || [];
 
-    if (userRole === requiredRole) {
+    if (this.authService.hasAccess(allowedRoles)) {
       return true;
     } else {
       const dialogRef = this.dialog.open(CustomDialogComponent, {
@@ -36,7 +35,7 @@ export class AuthGuard implements CanActivate {
       });
 
       dialogRef.afterClosed().subscribe(() => {
-        this.router.navigate(['/home']).then((r) => 'Page not found'); // Redirect to home after dialog is closed
+        this.router.navigate(['/home']);
       });
 
       return false;

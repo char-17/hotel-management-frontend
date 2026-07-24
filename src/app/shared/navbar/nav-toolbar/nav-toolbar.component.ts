@@ -7,7 +7,6 @@ import { MatButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
-import { AdminPageComponent } from '../../../features/role-pages/admin-page/admin-page.component';
 
 @Component({
     selector: 'nav-toolbar',
@@ -27,7 +26,6 @@ import { AdminPageComponent } from '../../../features/role-pages/admin-page/admi
         RouterLink,
         NgClass,
         NgIf,
-        AdminPageComponent,
     ]
 })
 export class NavToolbarComponent {

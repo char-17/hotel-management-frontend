@@ -8,6 +8,13 @@ import { NavToolbarComponent } from '../../shared/navbar/nav-toolbar/nav-toolbar
 import { LoginService } from './login.service';
 import { LoginResponse } from './interfaces/login-response';
 import { LoginRequest } from './interfaces/login-request';
+import { AuthService } from '../../core/services/auth.service';
+
+/* Role-to-dashboard mapping so each role lands on the correct page */
+const ROLE_DASHBOARD: Record<string, string> = {
+  admin: '/dashboard/admin',
+  manager: '/dashboard/manager',
+};
 
 @Component({
     selector: 'app-login',
@@ -30,6 +37,7 @@ export class LoginComponent {
 
   constructor(
     private loginService: LoginService,
+    private authService: AuthService,
     private router: Router,
   ) {}
 
@@ -46,8 +54,13 @@ export class LoginComponent {
     this.loginService.login(request).subscribe({
       next: (response: LoginResponse) => {
         if (response.loginStatus) {
+          /* Store JWT token and role so the interceptor and guard can use them */
+          localStorage.setItem('authToken', response.token);
+          this.authService.setUserRole = response.role || 'client';
           alert('Login Success!');
-          this.router.navigate(['/dashboard/']); // или другой путь
+          /* Navigate to the dashboard that matches the user's role */
+          const dashboard = ROLE_DASHBOARD[response.role] || '/dashboard';
+          this.router.navigate([dashboard]);
         } else {
           alert('Incorrect username or password !');
         }

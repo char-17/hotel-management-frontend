@@ -2,18 +2,10 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { User } from '../../../../../core/models/user.model';
 
-export interface User {
-  id?: number;
-  firstName: string;
-  lastName: string;
-  username: string;
-  password: string;
-  gender: string;
-  role: number;
-  email: string;
-  dateOfBirth: string;
-}
+/* Re-export User so existing component imports keep working */
+export { User } from '../../../../../core/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -22,8 +14,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
-    // Используйте правильный эндпоинт вашего API
-    return this.http.get<User[]>(`${this.apiUrl}`);
+    return this.http.get<User[]>(this.apiUrl);
   }
 
   updateUser(user: User): Observable<User> {

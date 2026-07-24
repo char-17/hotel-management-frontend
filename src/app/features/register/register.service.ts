@@ -25,7 +25,8 @@ export interface RegisterResponse {
   providedIn: 'root',
 })
 export class RegisterService {
-  private apiUrl = `${environment.apiUrl}/register`;
+  /* Register endpoint: /api/auth/register */
+  private apiUrl = `${environment.apiUrl}/auth/register`;
 
   constructor(private http: HttpClient) {}
 

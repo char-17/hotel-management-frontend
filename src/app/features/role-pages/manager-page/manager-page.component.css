@@ -1,19 +1,12 @@
-/*Mat Cards Icons - Manager Page */
-.arrivals {
-  background-image: url('/assets/icons/manager-page-icons/arrivals.jpg');
-  background-size: cover;
+/* Material icon used as card avatar — sized to match card header */
+.card-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #1e88e5;
 }
 
-.availability{
-  background-image: url('/assets/icons/manager-page-icons/availability.jpg');
-  background-size: cover;
-}
-
-.reservations{
-  background-image: url('/assets/icons/manager-page-icons/reservations.jpg');
-  background-size: cover;
-}
-
-mat-card:hover{
+/* Hover effect on management cards */
+mat-card:hover {
   background-color: lightgrey;
 }
