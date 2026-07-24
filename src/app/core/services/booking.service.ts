@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Booking } from '../models/booking.model';
-import {environment} from "../../../environments/environment";  // Correct path
+import { environment } from '../../../environments/environment';
 
+/* Full CRUD service matching the backend BookingController endpoints */
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
   private readonly apiUrl: string;
 
-  constructor(private http: HttpClient, ) {
+  constructor(private http: HttpClient) {
     this.apiUrl = `${environment.apiUrl}/bookings`;
   }
 
@@ -18,7 +19,21 @@ export class BookingService {
     return this.http.get<Booking[]>(this.apiUrl);
   }
 
+  getBookingById(id: number): Observable<Booking> {
+    return this.http.get<Booking>(`${this.apiUrl}/${id}`);
+  }
+
   createBooking(booking: Booking): Observable<Booking> {
     return this.http.post<Booking>(this.apiUrl, booking);
+  }
+
+  /* PUT update — matches backend @PutMapping("/{id}") */
+  updateBooking(id: number, booking: Booking): Observable<Booking> {
+    return this.http.put<Booking>(`${this.apiUrl}/${id}`, booking);
+  }
+
+  /* DELETE — matches backend @DeleteMapping("/{id}") */
+  deleteBooking(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

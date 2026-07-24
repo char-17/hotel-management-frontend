@@ -1,37 +1,38 @@
 import { Component } from '@angular/core';
-import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
-import { FormsModule } from '@angular/forms';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatToolbar } from '@angular/material/toolbar';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { NgClass, NgIf } from '@angular/common';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'nav-toolbar',
     templateUrl: './nav-toolbar.component.html',
     styleUrl: './nav-toolbar.component.css',
     imports: [
-        MatCard,
-        MatCardTitle,
-        MatCardContent,
-        FormsModule,
-        MatFormField,
-        MatInput,
-        MatButton,
-        MatLabel,
-        MatToolbar,
         RouterOutlet,
         RouterLink,
         NgClass,
-        NgIf,
     ]
 })
 export class NavToolbarComponent {
   isMenuOpen = false;
 
-  toggleMenu() {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  /* Expose auth state to the template for conditional link display */
+  get isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
+
+  toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  /* Clear auth data and redirect to login page */
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

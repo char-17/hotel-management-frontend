@@ -18,16 +18,14 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { DatePipe } from '@angular/common';
-import { AdminPageComponent } from '../../admin-page.component';
+import { BookingService } from '../../../../../core/services/booking.service';
+import { Booking } from '../../../../../core/models/booking.model';
 
 @Component({
     selector: 'app-manage-bookings',
@@ -35,15 +33,12 @@ import { AdminPageComponent } from '../../admin-page.component';
     styleUrls: ['./manage-bookings.component.css'],
     imports: [
         ReactiveFormsModule,
-        MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,
         MatButtonModule,
         MatTooltipModule,
         MatCardModule,
-        MatPaginatorModule,
-        AdminPageComponent,
         MatTable,
         MatColumnDef,
         MatHeaderCell,
@@ -59,21 +54,21 @@ import { AdminPageComponent } from '../../admin-page.component';
 export class ManageBookingsComponent implements OnInit {
   bookingForm: FormGroup;
   dataSource: MatTableDataSource<any>;
+  /* Column keys matching the backend Booking entity fields */
   displayedColumns: string[] = [
-    'bookingId',
-    'bookingCheckInDate',
-    'bookingCheckOutDate',
+    'id',
+    'checkInDate',
+    'checkOutDate',
     'roomId',
     'userId',
     'actions',
   ];
 
   isLoading = false;
-  pageNumber = 0;
 
   constructor(
     private fb: FormBuilder,
-    private datePipe: DatePipe,
+    private bookingService: BookingService,
   ) {
     this.bookingForm = this.fb.group({
       bookingRows: this.fb.array([]),
@@ -89,99 +84,106 @@ export class ManageBookingsComponent implements OnInit {
     return this.bookingForm.get('bookingRows') as FormArray;
   }
 
-  loadBookings() {
-    const bookings = [
-      {
-        bookingId: 1,
-        bookingCheckInDate: new Date('2024-08-01'),
-        bookingCheckOutDate: new Date('2024-08-05'),
-        roomId: 101,
-        userId: 1001,
+  /* Fetch bookings from the real API instead of hardcoded data */
+  loadBookings(): void {
+    this.isLoading = true;
+    this.bookingService.getAllBookings().subscribe({
+      next: (bookings) => {
+        this.bookingRows.clear();
+        bookings.forEach((b) => this.addBookingRow(b));
+        this.dataSource.data = this.bookingRows.controls;
+        this.isLoading = false;
       },
-      {
-        bookingId: 2,
-        bookingCheckInDate: new Date('2024-08-03'),
-        bookingCheckOutDate: new Date('2024-08-07'),
-        roomId: 102,
-        userId: 1002,
+      error: () => {
+        this.isLoading = false;
       },
-      {
-        bookingId: 2,
-        bookingCheckInDate: new Date('2024-08-09'),
-        bookingCheckOutDate: new Date('2024-08-11'),
-        roomId: 102,
-        userId: 1002,
-      },
-      // Additional bookings
-    ];
-
-    bookings.forEach((booking) => this.addBookingRow(booking));
-    this.dataSource.data = this.bookingRows.controls;
+    });
   }
 
-  addBookingRow(booking: {
-    bookingId: number;
-    bookingCheckInDate: Date;
-    bookingCheckOutDate: Date;
-    roomId: number;
-    userId: number;
-  }) {
-    const formattedCheckInDate = this.datePipe.transform(
-      booking.bookingCheckInDate,
-      'MM/dd/yyyy',
-    );
-    const formattedCheckOutDate = this.datePipe.transform(
-      booking.bookingCheckOutDate,
-      'MM/dd/yyyy',
-    );
-
-    const row: FormGroup = this.fb.group({
-      bookingId: [booking.bookingId],
-      bookingCheckInDate: [booking.bookingCheckInDate],
-      bookingCheckOutDate: [booking.bookingCheckOutDate],
-      roomId: [booking.roomId],
-      userId: [booking.userId],
+  /* Map the nested backend response (user.id, room.id) to flat form fields */
+  addBookingRow(booking: Booking): void {
+    const row = this.fb.group({
+      id: [booking.id],
+      checkInDate: [booking.checkInDate],
+      checkOutDate: [booking.checkOutDate],
+      roomId: [booking.room?.id],
+      userId: [booking.user?.id],
       isEditable: [false],
+      isNew: [false],
     });
     this.bookingRows.push(row);
   }
 
-  editBooking(index: number) {
+  editBooking(index: number): void {
     const row = this.bookingRows.at(index);
-    if (row) {
-      row.get('isEditable')?.setValue(true);
+    if (row) row.get('isEditable')?.setValue(true);
+  }
+
+  /* Persist changes via the API — create for new rows, update for existing */
+  saveBooking(index: number): void {
+    const row = this.bookingRows.at(index);
+    if (!row) return;
+
+    const val = row.value;
+    /* Reconstruct the nested structure the backend expects */
+    const booking: Booking = {
+      user: { id: val.userId },
+      room: { id: val.roomId },
+      checkInDate: val.checkInDate,
+      checkOutDate: val.checkOutDate,
+    };
+
+    if (val.isNew) {
+      this.bookingService.createBooking(booking).subscribe({
+        next: () => this.loadBookings(),
+      });
+    } else {
+      this.bookingService.updateBooking(val.id, booking).subscribe({
+        next: () => {
+          row.get('isEditable')?.setValue(false);
+        },
+      });
     }
   }
 
-  saveBooking(index: number) {
+  /* Cancel edit — remove unsaved new rows, revert existing rows */
+  cancelEdit(index: number): void {
     const row = this.bookingRows.at(index);
-    if (row) {
+    if (row?.value.isNew) {
+      this.bookingRows.removeAt(index);
+      this.dataSource.data = this.bookingRows.controls;
+    } else if (row) {
       row.get('isEditable')?.setValue(false);
+      /* Reload to discard unsaved changes */
+      this.loadBookings();
     }
   }
 
-  cancelEdit(index: number) {
+  /* Delete via API, then refresh the list */
+  deleteBooking(index: number): void {
     const row = this.bookingRows.at(index);
-    if (row) {
-      row.get('isEditable')?.setValue(false);
-    }
-  }
+    if (!row) return;
 
-  deleteBooking(index: number) {
-    if (this.bookingRows.length > 0) {
+    const id = row.value.id;
+    if (id && !row.value.isNew) {
+      this.bookingService.deleteBooking(id).subscribe({
+        next: () => this.loadBookings(),
+      });
+    } else {
       this.bookingRows.removeAt(index);
       this.dataSource.data = this.bookingRows.controls;
     }
   }
 
-  addNewBooking() {
-    const newRow: FormGroup = this.fb.group({
-      bookingId: [this.bookingRows.length + 1],
-      bookingCheckInDate: [new Date()],
-      bookingCheckOutDate: [new Date()],
-      roomId: [0],
-      userId: [0],
+  addNewBooking(): void {
+    const newRow = this.fb.group({
+      id: [null],
+      checkInDate: [''],
+      checkOutDate: [''],
+      roomId: [null],
+      userId: [null],
       isEditable: [true],
+      isNew: [true],
     });
     this.bookingRows.push(newRow);
     this.dataSource.data = this.bookingRows.controls;

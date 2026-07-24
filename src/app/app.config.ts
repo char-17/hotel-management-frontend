@@ -6,13 +6,14 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptor/auth.interceptor';
+import { errorInterceptor } from './core/interceptor/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideClientHydration(),
     provideAnimationsAsync(),
-    /* Register the JWT interceptor so every HTTP request carries the Bearer token */
-    provideHttpClient(withInterceptors([authInterceptor]))
+    /* Auth interceptor adds JWT token; error interceptor handles 401→login redirect */
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]))
   ]
 };
