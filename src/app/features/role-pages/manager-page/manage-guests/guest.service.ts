@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
+import { Page } from '../../../../core/models/page.model';
 
 /* Guest model matching the backend Guest entity */
 export interface Guest {
@@ -17,13 +19,13 @@ export interface Guest {
 @Injectable({ providedIn: 'root' })
 export class GuestService {
   /* Backend endpoint for guests */
-  /* Uses centralized environment URL — now /api/guests */
   private apiUrl = `${environment.apiUrl}/guests`;
 
   constructor(private http: HttpClient) {}
 
+  /* Extract content array from paginated response */
   getAll(): Observable<Guest[]> {
-    return this.http.get<Guest[]>(this.apiUrl);
+    return this.http.get<Page<Guest>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   create(guest: Guest): Observable<Guest> {

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
+import { Page } from '../../../../core/models/page.model';
 
 /* Reservation model matching the backend Reservation entity */
 export interface Reservation {
@@ -21,9 +23,9 @@ export class ReservationService {
 
   constructor(private http: HttpClient) {}
 
+  /* Extract content array from paginated response */
   getAll(): Observable<Reservation[]> {
-    /* Standardized: was /all_reservations — now plain GET */
-    return this.http.get<Reservation[]>(this.apiUrl);
+    return this.http.get<Page<Reservation>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   getById(id: number): Observable<Reservation> {

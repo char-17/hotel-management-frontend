@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
+import { Page } from '../../../../core/models/page.model';
 
 /* Staff model — backend uses the User entity filtered by STAFF role */
 export interface Staff {
@@ -15,13 +17,13 @@ export interface Staff {
 @Injectable({ providedIn: 'root' })
 export class StaffService {
   /* Backend endpoint for staff management */
-  /* Uses centralized environment URL */
   private apiUrl = `${environment.apiUrl}/staff`;
 
   constructor(private http: HttpClient) {}
 
+  /* Extract content array from paginated response */
   getAll(): Observable<Staff[]> {
-    return this.http.get<Staff[]>(this.apiUrl);
+    return this.http.get<Page<Staff>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   create(staff: Staff): Observable<Staff> {

@@ -19,6 +19,9 @@
   <h1 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
     <mat-icon class="mr-2 text-blue-600">people</mat-icon>
     User Management
+    <button mat-fab color="primary" (click)="addUser()" matTooltip="Add New User" class="ml-4">
+      <mat-icon>add</mat-icon>
+    </button>
   </h1>
 
   <mat-card class="shadow-lg overflow-hidden" [hidden]="isLoading">

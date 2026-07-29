@@ -71,6 +71,7 @@ export class ManageUsersComponent implements OnInit {
   isLoading = true;
   editingIndex: number | null = null;
   originalUser: User | null = null;
+  isCreating = false;
   showPassword: boolean[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -108,9 +109,23 @@ export class ManageUsersComponent implements OnInit {
     this.showPassword[index] = !this.showPassword[index];
   }
 
+  /* Add a blank row at the top of the table for creating a new user */
+  addUser(): void {
+    if (this.isCreating) return;
+    const newUser: User = {
+      username: '', password: '', firstName: '', lastName: '',
+      email: '', gender: '', dateOfBirth: '', role: 5,
+    };
+    this.dataSource.data = [newUser, ...this.dataSource.data];
+    this.editingIndex = 0;
+    this.isCreating = true;
+    this.showPassword = [true, ...this.showPassword];
+  }
+
   editUser(index: number): void {
     this.editingIndex = index;
-    this.originalUser = { ...this.dataSource.data[index] }; // his is the copy of user data before changes(edit)
+    this.isCreating = false;
+    this.originalUser = { ...this.dataSource.data[index] };
   }
 
   saveUser(index: number): void {
@@ -119,25 +134,49 @@ export class ManageUsersComponent implements OnInit {
       ...user,
       dateOfBirth: formatDate(user.dateOfBirth, 'yyyy-MM-dd', 'en-US'),
     };
-    this.userService.updateUser(formattedUser).subscribe({
-      next: () => {
-        this.editingIndex = null;
-        this.showSuccess('User updated successfully');
-      },
-      error: (error) => {
-        if (error.status === 400 && error.error?.includes('username')) {
-          this.showError('User with such username already exists');
-        } else if (error.status === 404) {
-          this.showError('User not found');
-        } else {
-          this.showError('User update error');
-        }
-      },
-    });
+
+    /* Create or update depending on whether we're adding a new user */
+    if (this.isCreating) {
+      this.userService.createUser(formattedUser).subscribe({
+        next: () => {
+          this.editingIndex = null;
+          this.isCreating = false;
+          this.showSuccess('User created successfully');
+          this.loadUsers();
+        },
+        error: (error) => {
+          if (error.status === 400) {
+            this.showError('Validation error — check all fields');
+          } else {
+            this.showError('Failed to create user');
+          }
+        },
+      });
+    } else {
+      this.userService.updateUser(formattedUser).subscribe({
+        next: () => {
+          this.editingIndex = null;
+          this.showSuccess('User updated successfully');
+        },
+        error: (error) => {
+          if (error.status === 400 && error.error?.includes('username')) {
+            this.showError('User with such username already exists');
+          } else if (error.status === 404) {
+            this.showError('User not found');
+          } else {
+            this.showError('User update error');
+          }
+        },
+      });
+    }
   }
 
   cancelEdit(): void {
-    if (this.originalUser && this.editingIndex !== null) {
+    if (this.isCreating) {
+      /* Remove the blank row that was added for creation */
+      this.dataSource.data = this.dataSource.data.slice(1);
+      this.isCreating = false;
+    } else if (this.originalUser && this.editingIndex !== null) {
       this.dataSource.data[this.editingIndex] = this.originalUser;
       this.dataSource._updateChangeSubscription();
     }

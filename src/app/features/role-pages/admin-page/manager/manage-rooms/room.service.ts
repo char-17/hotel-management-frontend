@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../../environments/environment';
+import { Page } from '../../../../../core/models/page.model';
 
 export interface Room {
   id?: number;
@@ -21,8 +23,9 @@ export class RoomService {
 
   constructor(private http: HttpClient) {}
 
+  /* Extract content array from paginated response */
   getRooms(): Observable<Room[]> {
-    return this.http.get<Room[]>(this.apiUrl);
+    return this.http.get<Page<Room>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   getRoomById(id: number): Observable<Room> {

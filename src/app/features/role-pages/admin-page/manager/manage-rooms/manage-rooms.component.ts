@@ -66,7 +66,8 @@ export class ManageRoomsComponent implements OnInit {
   dataSource = new MatTableDataSource<Room>();
   isLoading = true;
   editingIndex: number | null = null;
-  originalRoom: Room | null = null; // Для хранения оригинальных данных при редактировании
+  originalRoom: Room | null = null; // Stores original data for edit cancellation
+  isCreating = false; // Tracks whether we are adding a new room vs editing
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -90,7 +91,7 @@ export class ManageRoomsComponent implements OnInit {
         catchError((error) => {
           console.error('Error while loading rooms:', error);
           this.isLoading = false;
-          return of([]); // Возвращаем пустой массив в случае ошибки
+          return of([]); // Return empty array on error
         }),
       )
       .subscribe((rooms) => {
@@ -99,22 +100,59 @@ export class ManageRoomsComponent implements OnInit {
       });
   }
 
+  /* Insert a blank room at the top of the table for inline creation */
+  addRoom(): void {
+    const newRoom: Room = {
+      roomNumber: '',
+      roomType: '',
+      capacity: 1,
+      roomPrice: 0,
+      roomStatus: 'AVAILABLE',
+    } as Room;
+    const data = this.dataSource.data;
+    data.unshift(newRoom);
+    this.dataSource.data = data;
+    this.editingIndex = 0;
+    this.isCreating = true; // Flag so saveRoom knows to POST instead of PUT
+  }
+
   editRoom(index: number): void {
     this.editingIndex = index;
-    // Клонируем объект для возможности отмены изменений
+    // Clone object so we can revert on cancel
     this.originalRoom = { ...this.dataSource.data[index] };
   }
 
   saveRoom(index: number): void {
     if (this.editingIndex === index) {
       const roomToSave = this.dataSource.data[index];
-      // Проверка на undefined для id
+
+      /* Branch: create new room via POST, or update existing via PUT */
+      if (this.isCreating) {
+        this.roomService
+          .createRoom(roomToSave)
+          .pipe(
+            catchError((error) => {
+              console.error('Error creating room:', error);
+              alert('Failed to create room. Check the console for details.');
+              this.cancelEdit();
+              return of(null);
+            }),
+          )
+          .subscribe((created) => {
+            if (created) {
+              console.log('Room created:', created);
+              this.isCreating = false;
+              this.editingIndex = null;
+              this.loadRooms(); // Reload to get server-assigned ID
+            }
+          });
+        return;
+      }
+
+      // Guard against missing room ID
       if (roomToSave.id === undefined) {
-        console.error(
-          'Ошибка: ID комнаты для сохранения не определен.',
-          roomToSave,
-        );
-        alert('Невозможно сохранить комнату: ID не определен.');
+        console.error('Error: room ID is undefined, cannot save.', roomToSave);
+        alert('Cannot save room: ID is undefined.');
         this.cancelEdit();
         return;
       }
@@ -123,20 +161,18 @@ export class ManageRoomsComponent implements OnInit {
         .updateRoom(roomToSave.id, roomToSave)
         .pipe(
           catchError((error) => {
-            console.error('Ошибка при сохранении комнаты:', error);
+            console.error('Error saving room:', error);
             if (this.originalRoom) {
               this.dataSource.data[index] = this.originalRoom;
               this.dataSource._updateChangeSubscription();
             }
-            alert(
-              'Не удалось сохранить изменения. Проверьте консоль для деталей.',
-            );
+            alert('Failed to save changes. Check the console for details.');
             this.cancelEdit();
             return of(roomToSave);
           }),
         )
         .subscribe((updatedRoom) => {
-          console.log('Комната обновлена:', updatedRoom);
+          console.log('Room updated:', updatedRoom);
           this.editingIndex = null;
           this.originalRoom = null;
         });
@@ -144,9 +180,18 @@ export class ManageRoomsComponent implements OnInit {
   }
 
   cancelEdit(): void {
+    /* If we were creating, remove the unsaved blank row */
+    if (this.isCreating) {
+      const data = this.dataSource.data;
+      data.splice(0, 1);
+      this.dataSource.data = data;
+      this.isCreating = false;
+      this.editingIndex = null;
+      return;
+    }
     if (this.editingIndex !== null && this.originalRoom) {
       this.dataSource.data[this.editingIndex] = this.originalRoom;
-      this.dataSource._updateChangeSubscription(); // Обновляем таблицу
+      this.dataSource._updateChangeSubscription(); // Refresh table view
     }
     this.editingIndex = null;
     this.originalRoom = null;
@@ -154,32 +199,29 @@ export class ManageRoomsComponent implements OnInit {
 
   deleteRoom(index: number): void {
     const roomToDelete = this.dataSource.data[index];
-    // Проверка на undefined для id
+    // Guard against missing room ID
     if (roomToDelete.id === undefined) {
-      console.error(
-        'Ошибка: ID комнаты для удаления не определен.',
-        roomToDelete,
-      );
-      alert('Невозможно удалить комнату: ID не определен.');
+      console.error('Error: room ID is undefined, cannot delete.', roomToDelete);
+      alert('Cannot delete room: ID is undefined.');
       return;
     }
 
     if (
       confirm(
-        `Вы уверены, что хотите удалить комнату №${roomToDelete.roomNumber}?`,
+        `Are you sure you want to delete room #${roomToDelete.roomNumber}?`,
       )
     ) {
       this.roomService
         .deleteRoom(roomToDelete.id)
         .pipe(
           catchError((error) => {
-            console.error('Ошибка при удалении комнаты:', error);
-            alert('Не удалось удалить комнату. Проверьте консоль для деталей.');
+            console.error('Error deleting room:', error);
+            alert('Failed to delete room. Check the console for details.');
             return of(null);
           }),
         )
         .subscribe(() => {
-          console.log('Комната удалена:', roomToDelete);
+          console.log('Room deleted:', roomToDelete);
           this.dataSource.data.splice(index, 1);
           this.dataSource._updateChangeSubscription();
         });

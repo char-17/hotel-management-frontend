@@ -13,6 +13,10 @@
   <h1 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
     <mat-icon class="mr-2 text-blue-600">hotel</mat-icon>
     Room Management
+    <!-- Add New room button — inserts a blank editable row at the top -->
+    <button mat-fab color="accent" (click)="addRoom()" matTooltip="Add New Room" class="ml-4" [disabled]="isCreating">
+      <mat-icon>add</mat-icon>
+    </button>
   </h1>
 
   <mat-card class="shadow-lg overflow-hidden" [hidden]="isLoading">

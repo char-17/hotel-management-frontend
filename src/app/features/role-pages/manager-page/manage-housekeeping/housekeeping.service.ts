@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
+import { Page } from '../../../../core/models/page.model';
 
 /* Housekeeping model matching the backend Housekeeping entity */
 export interface Housekeeping {
@@ -16,13 +18,13 @@ export interface Housekeeping {
 @Injectable({ providedIn: 'root' })
 export class HousekeepingService {
   /* Backend endpoint for housekeeping tasks */
-  /* Uses centralized environment URL — now /api/housekeeping */
   private apiUrl = `${environment.apiUrl}/housekeeping`;
 
   constructor(private http: HttpClient) {}
 
+  /* Extract content array from paginated response */
   getAll(): Observable<Housekeeping[]> {
-    return this.http.get<Housekeeping[]>(this.apiUrl);
+    return this.http.get<Page<Housekeeping>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   getById(id: number): Observable<Housekeeping> {

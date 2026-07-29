@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
+import { Page } from '../../../../core/models/page.model';
 
 /* Employee model matching the backend Employee entity */
 export interface Employee {
@@ -17,13 +19,13 @@ export interface Employee {
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
   /* Backend endpoint for employees */
-  /* Uses centralized environment URL — now /api/employees */
   private apiUrl = `${environment.apiUrl}/employees`;
 
   constructor(private http: HttpClient) {}
 
+  /* Extract content array from paginated response */
   getAll(): Observable<Employee[]> {
-    return this.http.get<Employee[]>(this.apiUrl);
+    return this.http.get<Page<Employee>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   getById(id: number): Observable<Employee> {

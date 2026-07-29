@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
+import { Page } from '../../../../core/models/page.model';
 
 /* Payment model matching the backend Payment entity */
 export interface Payment {
@@ -15,13 +17,13 @@ export interface Payment {
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
   /* Backend endpoint for payments */
-  /* Uses centralized environment URL — now /api/payments */
   private apiUrl = `${environment.apiUrl}/payments`;
 
   constructor(private http: HttpClient) {}
 
+  /* Extract content array from paginated response */
   getAll(): Observable<Payment[]> {
-    return this.http.get<Payment[]>(this.apiUrl);
+    return this.http.get<Page<Payment>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   getById(id: number): Observable<Payment> {
