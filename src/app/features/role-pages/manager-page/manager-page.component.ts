@@ -9,7 +9,8 @@ import {
   MatCardTitle,
 } from '@angular/material/card';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+/* MatIcon standalone component suffices — no need for the full module */
+import { MatIcon } from '@angular/material/icon';
 import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.service';
 
 /* Manager dashboard landing page — links to all management sub-pages */
@@ -28,7 +29,6 @@ import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.
         MatCardSubtitle,
         MatCardAvatar,
         MatTooltip,
-        MatIconModule,
     ]
 })
 export class ManagerPageComponent {

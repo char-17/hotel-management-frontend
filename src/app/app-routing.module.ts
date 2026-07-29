@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { BookingsComponent } from './features/bookings/bookings.component';
 import { RegisterComponent } from './features/register/register.component';
 import { LoginComponent } from './features/login/login.component';
@@ -61,9 +60,3 @@ export const routes: Routes = [
   /* Catch-all: redirect unknown URLs to home instead of showing a blank page */
   { path: '**', redirectTo: '/home' },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}

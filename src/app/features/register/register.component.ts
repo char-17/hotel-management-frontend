@@ -71,7 +71,6 @@ export class RegisterComponent {
   matcher = new MyErrorStateMatcher();
 
   private dialog = inject(MatDialog);
-  // private router = inject(Router);
 
   constructor(
     private fb: FormBuilder,
@@ -101,10 +100,10 @@ export class RegisterComponent {
   }
 
   onRegisterSuccess(): void {
-    (document.activeElement as HTMLElement)?.blur(); //afairoume to focus apo to button
+    (document.activeElement as HTMLElement)?.blur(); // Remove focus from the button
 
     const dialogRef = this.dialog.open(RegistrationSuccessDialogComponent, {
-      data: 'Registered Successfull',
+      data: 'Registered Successfully',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -132,21 +131,18 @@ export class RegisterComponent {
 
     this.registerService.register(request).subscribe({
       next: (response) => {
-        console.log('Ответ от сервера:', response);
         if (
           response.registrationErrorMessage === 'Registration Successfully!'
         ) {
-          this.onRegisterSuccess(); //Перенаправление на /login
-          console.log(response);
+          this.onRegisterSuccess();
         } else {
-          // ошибка от сервера
-          console.log(response);
+          /* Server returned a validation/business error — show it to the user */
+          this.onRegisterError(response.registrationErrorMessage);
         }
       },
-      error: (err) => {
-        console.error('Ошибка при регистрации:', err);
+      error: () => {
         this.onRegisterError(
-          'Registration Failed!, There is already user with that username',
+          'Registration Failed! There is already a user with that username',
         );
       },
     });
