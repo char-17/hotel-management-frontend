@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Booking } from '../models/booking.model';
+import { Page } from '../models/page.model';
 import { environment } from '../../../environments/environment';
 
 /* Full CRUD service matching the backend BookingController endpoints */
@@ -15,8 +17,9 @@ export class BookingService {
     this.apiUrl = `${environment.apiUrl}/bookings`;
   }
 
+  /* Extract content array from paginated response */
   getAllBookings(): Observable<Booking[]> {
-    return this.http.get<Booking[]>(this.apiUrl);
+    return this.http.get<Page<Booking>>(this.apiUrl).pipe(map(page => page.content));
   }
 
   getBookingById(id: number): Observable<Booking> {

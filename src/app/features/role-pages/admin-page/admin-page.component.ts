@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
-import { NgClass } from '@angular/common';
+import { NgClass, DecimalPipe, CurrencyPipe } from '@angular/common';
 import {
   MatCard,
   MatCardAvatar,
+  MatCardContent,
   MatCardHeader,
   MatCardSubtitle,
   MatCardTitle,
 } from '@angular/material/card';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.service';
+import { DashboardService } from '../../../core/services/dashboard.service';
+import { DashboardStats } from '../../../core/models/dashboard-stats.model';
 
 @Component({
     selector: 'app-admin-page',
@@ -23,11 +28,39 @@ import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.
         MatCardTitle,
         MatCardSubtitle,
         MatCardAvatar,
+        MatCardContent,
         MatTooltip,
+        MatIcon,
+        MatProgressSpinner,
         RouterOutlet,
         RouterModule,
+        DecimalPipe,
+        CurrencyPipe,
     ]
 })
-export class AdminPageComponent {
-  constructor(protected menuService: MenuService) {}
+export class AdminPageComponent implements OnInit {
+  stats: DashboardStats | null = null;
+  isLoadingStats = true;
+
+  constructor(
+    protected menuService: MenuService,
+    private dashboardService: DashboardService,
+  ) {}
+
+  ngOnInit(): void {
+    this.loadStats();
+  }
+
+  loadStats(): void {
+    this.isLoadingStats = true;
+    this.dashboardService.getStats().subscribe({
+      next: (stats) => {
+        this.stats = stats;
+        this.isLoadingStats = false;
+      },
+      error: () => {
+        this.isLoadingStats = false;
+      },
+    });
+  }
 }

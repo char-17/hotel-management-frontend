@@ -1,4 +1,5 @@
 <div>
+  <!-- Sticky header navbar -->
   <div class="sticky top-0 bg-red-900 text-white flex items-center justify-between p-4 z-50 shadow-md">
     <div class="text-lg font-semibold">
       <a routerLink="dashboard/admin">Hotel Management</a>
@@ -7,7 +8,7 @@
       <a routerLink="/dashboard/admin/manage-users" class="hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
       <a routerLink="/dashboard/admin/manage-rooms" class="hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
       <a routerLink="/dashboard/admin/manage-bookings" class="hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
-      <a routerLink="/login" class="hover:underline hover:text-orange-500 transition duration-300">Login</a>
+      <a routerLink="/dashboard/manager" class="hover:underline hover:text-orange-500 transition duration-300">Manager View</a>
     </div>
     <button class="md:hidden" (click)="menuService.toggleMenu()">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -15,48 +16,117 @@
       </svg>
     </button>
   </div>
+  <!-- Mobile menu -->
   <div [ngClass]="{ 'block': menuService.isMenuOpen, 'hidden': !menuService.isMenuOpen }" class="md:hidden bg-orange-900 text-white p-4 space-y-2">
     <a routerLink="/dashboard/admin/manage-users" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
     <a routerLink="/dashboard/admin/manage-rooms" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
     <a routerLink="/dashboard/admin/manage-bookings" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
+    <a routerLink="/dashboard/manager" class="block hover:underline hover:text-orange-500 transition duration-300">Manager View</a>
   </div>
-  <div>
-    <h2>This is the title of the admin page </h2>
-  </div>
-  <div class="flex items-center justify-center min-h-52 p-4">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+
+  <!-- Dashboard stats section -->
+  <div class="px-4 py-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-4">Dashboard</h2>
+
+    @if (isLoadingStats) {
+      <div class="flex justify-center py-8">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
+    }
+
+    @if (stats) {
+      <!-- Stats cards row 1: Rooms -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-blue-600 text-3xl mb-1">hotel</mat-icon>
+          <div class="text-3xl font-bold text-gray-800">{{ stats.totalRooms }}</div>
+          <div class="text-sm text-gray-500">Total Rooms</div>
+        </mat-card>
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-green-600 text-3xl mb-1">check_circle</mat-icon>
+          <div class="text-3xl font-bold text-green-600">{{ stats.availableRooms }}</div>
+          <div class="text-sm text-gray-500">Available</div>
+        </mat-card>
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-red-600 text-3xl mb-1">person</mat-icon>
+          <div class="text-3xl font-bold text-red-600">{{ stats.occupiedRooms }}</div>
+          <div class="text-sm text-gray-500">Occupied</div>
+        </mat-card>
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-orange-600 text-3xl mb-1">cleaning_services</mat-icon>
+          <div class="text-3xl font-bold text-orange-600">{{ stats.dirtyRooms }}</div>
+          <div class="text-sm text-gray-500">Needs Cleaning</div>
+        </mat-card>
+      </div>
+
+      <!-- Stats cards row 2: Operations & Revenue -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-indigo-600 text-3xl mb-1">trending_up</mat-icon>
+          <div class="text-3xl font-bold text-indigo-600">{{ stats.occupancyRate | number:'1.0-0' }}%</div>
+          <div class="text-sm text-gray-500">Occupancy Rate</div>
+        </mat-card>
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-teal-600 text-3xl mb-1">login</mat-icon>
+          <div class="text-3xl font-bold text-teal-600">{{ stats.todayCheckIns }}</div>
+          <div class="text-sm text-gray-500">Today's Check-ins</div>
+        </mat-card>
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-purple-600 text-3xl mb-1">logout</mat-icon>
+          <div class="text-3xl font-bold text-purple-600">{{ stats.todayCheckOuts }}</div>
+          <div class="text-sm text-gray-500">Today's Check-outs</div>
+        </mat-card>
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-amber-600 text-3xl mb-1">event</mat-icon>
+          <div class="text-3xl font-bold text-amber-600">{{ stats.pendingReservations }}</div>
+          <div class="text-sm text-gray-500">Pending Reservations</div>
+        </mat-card>
+      </div>
+
+      <!-- Stats cards row 3: Revenue -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-green-700 text-3xl mb-1">payments</mat-icon>
+          <div class="text-3xl font-bold text-green-700">{{ stats.totalRevenue | currency:'EUR' }}</div>
+          <div class="text-sm text-gray-500">Total Revenue</div>
+        </mat-card>
+        <mat-card class="text-center p-4">
+          <mat-icon class="text-red-500 text-3xl mb-1">pending_actions</mat-icon>
+          <div class="text-3xl font-bold text-red-500">{{ stats.pendingPayments | currency:'EUR' }}</div>
+          <div class="text-sm text-gray-500">Pending Payments</div>
+        </mat-card>
+      </div>
+    }
+
+    <!-- Navigation cards -->
+    <h3 class="text-xl font-semibold text-gray-700 mb-3">Quick Access</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <a routerLink="/dashboard/admin/manage-users" class="hover:text-orange-500 transition duration-300">
-        <div>
-          <mat-card class="manage-users hover:bg-lightgrey" matTooltip="Info about the action">
-            <mat-card-header>
-              <div mat-card-avatar class="gear-image"></div>
-              <mat-card-title>Manage Users</mat-card-title>
-              <mat-card-subtitle>User Crud Operations</mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
+        <mat-card class="hover:shadow-lg transition-shadow cursor-pointer">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="text-blue-600">people</mat-icon>
+            <mat-card-title>Manage Users</mat-card-title>
+            <mat-card-subtitle>User CRUD Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
       </a>
       <a routerLink="/dashboard/admin/manage-rooms" class="hover:text-orange-500 transition duration-300">
-        <div>
-          <mat-card class="manage-rooms hover:bg-lightgrey">
-            <mat-card-header>
-              <div mat-card-avatar class="rooms"></div>
-              <mat-card-title>Manage Rooms</mat-card-title>
-              <mat-card-subtitle>Room Crud Operations</mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
+        <mat-card class="hover:shadow-lg transition-shadow cursor-pointer">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="text-green-600">meeting_room</mat-icon>
+            <mat-card-title>Manage Rooms</mat-card-title>
+            <mat-card-subtitle>Room CRUD Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
       </a>
       <a routerLink="/dashboard/admin/manage-bookings" class="hover:text-orange-500 transition duration-300">
-        <div>
-          <mat-card class="manage-bookings hover:bg-lightgrey">
-            <mat-card-header>
-              <div mat-card-avatar class="booking"></div>
-              <mat-card-title>Manage Bookings</mat-card-title>
-              <mat-card-subtitle>Booking Crud Operations</mat-card-subtitle>
-            </mat-card-header>
-          </mat-card>
-        </div>
+        <mat-card class="hover:shadow-lg transition-shadow cursor-pointer">
+          <mat-card-header>
+            <mat-icon mat-card-avatar class="text-purple-600">book_online</mat-icon>
+            <mat-card-title>Manage Bookings</mat-card-title>
+            <mat-card-subtitle>Booking CRUD Operations</mat-card-subtitle>
+          </mat-card-header>
+        </mat-card>
       </a>
     </div>
   </div>
