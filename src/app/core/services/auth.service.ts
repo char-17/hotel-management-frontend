@@ -4,13 +4,12 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
-/* Role hierarchy: admin > manager > staff > client/guest */
+/* Role hierarchy: admin > manager > staff > client (guest removed — guests don't have accounts) */
 const ROLE_HIERARCHY: Record<string, number> = {
   admin: 100,
   manager: 50,
   staff: 30,
   client: 10,
-  guest: 5,
 };
 
 @Injectable({

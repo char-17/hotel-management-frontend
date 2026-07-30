@@ -4,17 +4,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import { Page } from '../../../../core/models/page.model';
+/* Import from shared model instead of defining locally */
+import { Guest } from '../../../../core/models/guest.model';
 
-/* Guest model matching the backend Guest entity */
-export interface Guest {
-  guestID?: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  dateOfBirth: string;
-}
+/* Re-export so existing imports from this file still work */
+export { Guest } from '../../../../core/models/guest.model';
 
 @Injectable({ providedIn: 'root' })
 export class GuestService {

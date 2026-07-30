@@ -27,9 +27,9 @@ import { Guest, GuestService } from './guest.service';
   ]
 })
 export class ManageGuestsComponent implements OnInit {
-  /* Columns displayed in the guests table */
+  /* Columns displayed in the guests table — includes nationality and passportNumber */
   displayedColumns: string[] = [
-    'guestID', 'firstName', 'lastName', 'email', 'phone', 'address', 'dateOfBirth', 'actions',
+    'guestID', 'firstName', 'lastName', 'email', 'phone', 'nationality', 'passportNumber', 'actions',
   ];
 
   dataSource = new MatTableDataSource<Guest>();
@@ -69,6 +69,7 @@ export class ManageGuestsComponent implements OnInit {
 
   /* Insert a blank guest at the top of the table for inline creation */
   addItem(): void {
+    /* Blank guest object with all fields for inline creation */
     const newItem: Guest = {
       firstName: '',
       lastName: '',
@@ -76,6 +77,9 @@ export class ManageGuestsComponent implements OnInit {
       phone: '',
       address: '',
       dateOfBirth: '',
+      nationality: '',
+      passportNumber: '',
+      notes: '',
     } as Guest;
     const data = this.dataSource.data;
     data.unshift(newItem);
