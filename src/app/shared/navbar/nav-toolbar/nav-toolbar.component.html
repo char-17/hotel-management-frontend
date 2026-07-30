@@ -4,9 +4,8 @@
     <a routerLink="/home">Hotel Management</a>
   </div>
 
-  <!-- Desktop links -->
+  <!-- Desktop links — Bookings removed, reservations are managed from the dashboard -->
   <div class="hidden md:flex space-x-4 items-center">
-    <a routerLink="/bookings" class="hover:text-orange-500 transition duration-300">Bookings</a>
     @if (!isAuthenticated) {
       <a routerLink="/register" class="hover:text-orange-500 transition duration-300">Register</a>
       <a routerLink="/login" class="hover:text-orange-500 transition duration-300">Login</a>
@@ -26,9 +25,8 @@
   </button>
 </div>
 
-<!-- Mobile dropdown menu -->
+<!-- Mobile dropdown menu — Bookings removed, reservations are managed from the dashboard -->
 <div [ngClass]="{ 'block': isMenuOpen, 'hidden': !isMenuOpen }" class="md:hidden bg-blue-500 text-white p-4 space-y-2">
-  <a routerLink="/bookings" class="block hover:text-orange-500 transition duration-300">Bookings</a>
   @if (!isAuthenticated) {
     <a routerLink="/register" class="block hover:text-orange-500 transition duration-300">Register</a>
     <a routerLink="/login" class="block hover:text-orange-500 transition duration-300">Login</a>

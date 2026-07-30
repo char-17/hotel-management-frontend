@@ -5,9 +5,9 @@
       <a routerLink="dashboard/admin">Hotel Management</a>
     </div>
     <div class="hidden md:flex space-x-4">
+      <!-- Bookings link removed — reservations are the single source of truth -->
       <a routerLink="/dashboard/admin/manage-users" class="hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
       <a routerLink="/dashboard/admin/manage-rooms" class="hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
-      <a routerLink="/dashboard/admin/manage-bookings" class="hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
       <a routerLink="/dashboard/manager" class="hover:underline hover:text-orange-500 transition duration-300">Manager View</a>
     </div>
     <button class="md:hidden" (click)="menuService.toggleMenu()">
@@ -20,7 +20,6 @@
   <div [ngClass]="{ 'block': menuService.isMenuOpen, 'hidden': !menuService.isMenuOpen }" class="md:hidden bg-orange-900 text-white p-4 space-y-2">
     <a routerLink="/dashboard/admin/manage-users" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Users</a>
     <a routerLink="/dashboard/admin/manage-rooms" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Rooms</a>
-    <a routerLink="/dashboard/admin/manage-bookings" class="block hover:underline hover:text-orange-500 transition duration-300">Manage Bookings</a>
     <a routerLink="/dashboard/manager" class="block hover:underline hover:text-orange-500 transition duration-300">Manager View</a>
   </div>
 
@@ -116,15 +115,6 @@
             <mat-icon mat-card-avatar class="text-green-600">meeting_room</mat-icon>
             <mat-card-title>Manage Rooms</mat-card-title>
             <mat-card-subtitle>Room CRUD Operations</mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </a>
-      <a routerLink="/dashboard/admin/manage-bookings" class="hover:text-orange-500 transition duration-300">
-        <mat-card class="hover:shadow-lg transition-shadow cursor-pointer">
-          <mat-card-header>
-            <mat-icon mat-card-avatar class="text-purple-600">book_online</mat-icon>
-            <mat-card-title>Manage Bookings</mat-card-title>
-            <mat-card-subtitle>Booking CRUD Operations</mat-card-subtitle>
           </mat-card-header>
         </mat-card>
       </a>

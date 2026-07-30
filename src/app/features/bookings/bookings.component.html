@@ -1,8 +1,0 @@
-<nav-toolbar></nav-toolbar>
-<h2>Bookings</h2>
-<ul>
-  <li *ngFor="let booking of bookings">
-    <!-- Display room ID and date range — matches updated Booking model -->
-    Room {{ booking.room?.id }} — {{ booking.checkInDate }} to {{ booking.checkOutDate }}
-  </li>
-</ul>

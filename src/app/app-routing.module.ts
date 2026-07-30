@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { BookingsComponent } from './features/bookings/bookings.component';
 import { RegisterComponent } from './features/register/register.component';
 import { LoginComponent } from './features/login/login.component';
 import { HomeComponent } from './features/home/home/home.component';
@@ -8,7 +7,6 @@ import { ManagerPageComponent } from './features/role-pages/manager-page/manager
 import { AuthGuard } from './core/guards/auth.guard';
 import { ManageUsersComponent } from './features/role-pages/admin-page/manager/manage-users/manage-users.component';
 import { ManageRoomsComponent } from './features/role-pages/admin-page/manager/manage-rooms/manage-rooms.component';
-import { ManageBookingsComponent } from './features/role-pages/admin-page/manager/manage-bookings/manage-bookings.component';
 import { DashboardComponent } from './features/dashboard/dashboard/dashboard.component';
 /* Manager sub-page imports */
 import { ManageReservationsComponent } from './features/role-pages/manager-page/manage-reservations/manage-reservations.component';
@@ -19,8 +17,8 @@ import { ManageEmployeesComponent } from './features/role-pages/manager-page/man
 import { ManageInvoicesComponent } from './features/role-pages/manager-page/manage-invoices/manage-invoices.component';
 import { ManagePaymentsComponent } from './features/role-pages/manager-page/manage-payments/manage-payments.component';
 
+/* Booking entity removed — reservations are the single source of truth */
 export const routes: Routes = [
-  { path: 'bookings', component: BookingsComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent },
@@ -36,7 +34,6 @@ export const routes: Routes = [
     children: [
       { path: 'manage-users', component: ManageUsersComponent },
       { path: 'manage-rooms', component: ManageRoomsComponent },
-      { path: 'manage-bookings', component: ManageBookingsComponent },
     ],
   },
 

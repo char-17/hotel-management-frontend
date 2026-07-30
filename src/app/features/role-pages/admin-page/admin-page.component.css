@@ -32,10 +32,7 @@ mat-toolbar {
   background-size: cover;
 }
 
-.booking{
-  background-image: url('/assets/icons/admin-page-icons/booking.jpg');
-  background-size: cover;
-}
+/* .booking CSS class removed — Booking entity deleted */
 
 mat-card:hover{
   background-color: lightgrey;
