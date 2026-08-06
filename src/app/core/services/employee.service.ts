@@ -2,19 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../environments/environment';
-import { Page } from '../../../../core/models/page.model';
-
-/* Employee model matching the backend Employee entity */
-export interface Employee {
-  employeeId?: number;
-  firstName: string;
-  lastName: string;
-  role: string;
-  email: string;
-  phone: string;
-  salary: string;
-}
+/* Centralized imports from core — models and environment live alongside this service */
+import { environment } from '../../../environments/environment';
+import { Page } from '../models/page.model';
+import { Employee } from '../models/employee.model';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {

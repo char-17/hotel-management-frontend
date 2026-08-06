@@ -11,7 +11,8 @@ import {
 import { MatTooltip } from '@angular/material/tooltip';
 /* MatIcon standalone component suffices — no need for the full module */
 import { MatIcon } from '@angular/material/icon';
-import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.service';
+/* MenuService moved to core — centralized UI state management */
+import { MenuService } from '../../../core/services/menu.service';
 
 /* Manager dashboard landing page — links to all management sub-pages */
 @Component({

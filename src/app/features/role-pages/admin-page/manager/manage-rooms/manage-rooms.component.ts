@@ -20,9 +20,16 @@ import { MatSort } from '@angular/material/sort';
 import { NgIf } from '@angular/common';
 import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
-import { Room, RoomService } from './room.service';
+/* Imports from centralized core — service and model moved out of feature folder */
+import { RoomService } from '../../../../../core/services/room.service';
+import { Room } from '../../../../../core/models/room.model';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { catchError, of } from 'rxjs';
+/* MatSnackBar replaces native alert() for non-blocking user feedback */
+import { MatSnackBar } from '@angular/material/snack-bar';
+/* MatDialog + ConfirmDialogComponent replace native confirm() for delete actions */
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
     selector: 'app-manage-rooms',
@@ -72,7 +79,19 @@ export class ManageRoomsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private roomService: RoomService) {}
+  constructor(
+    private roomService: RoomService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+  ) {}
+
+  /* Reusable snackbar helpers — replace native alert() with Material snackbar */
+  private showSuccess(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 3000 });
+  }
+  private showError(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+  }
 
   ngOnInit() {
     this.loadRooms();
@@ -133,7 +152,8 @@ export class ManageRoomsComponent implements OnInit {
           .pipe(
             catchError((error) => {
               console.error('Error creating room:', error);
-              alert('Failed to create room. Check the console for details.');
+              /* Material snackbar instead of native alert for error feedback */
+              this.showError('Failed to create room.');
               this.cancelEdit();
               return of(null);
             }),
@@ -152,7 +172,8 @@ export class ManageRoomsComponent implements OnInit {
       // Guard against missing room ID
       if (roomToSave.id === undefined) {
         console.error('Error: room ID is undefined, cannot save.', roomToSave);
-        alert('Cannot save room: ID is undefined.');
+        /* Material snackbar instead of native alert for error feedback */
+        this.showError('Cannot save room: ID is undefined.');
         this.cancelEdit();
         return;
       }
@@ -166,7 +187,8 @@ export class ManageRoomsComponent implements OnInit {
               this.dataSource.data[index] = this.originalRoom;
               this.dataSource._updateChangeSubscription();
             }
-            alert('Failed to save changes. Check the console for details.');
+            /* Material snackbar instead of native alert for error feedback */
+            this.showError('Failed to save changes.');
             this.cancelEdit();
             return of(roomToSave);
           }),
@@ -202,29 +224,33 @@ export class ManageRoomsComponent implements OnInit {
     // Guard against missing room ID
     if (roomToDelete.id === undefined) {
       console.error('Error: room ID is undefined, cannot delete.', roomToDelete);
-      alert('Cannot delete room: ID is undefined.');
+      /* Material snackbar instead of native alert for error feedback */
+      this.showError('Cannot delete room: ID is undefined.');
       return;
     }
 
-    if (
-      confirm(
-        `Are you sure you want to delete room #${roomToDelete.roomNumber}?`,
-      )
-    ) {
-      this.roomService
-        .deleteRoom(roomToDelete.id)
-        .pipe(
-          catchError((error) => {
-            console.error('Error deleting room:', error);
-            alert('Failed to delete room. Check the console for details.');
-            return of(null);
-          }),
-        )
-        .subscribe(() => {
-          console.log('Room deleted:', roomToDelete);
-          this.dataSource.data.splice(index, 1);
-          this.dataSource._updateChangeSubscription();
-        });
-    }
+    /* Material dialog instead of native confirm() for delete confirmation */
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Confirm Delete', message: `Are you sure you want to delete room #${roomToDelete.roomNumber}?` } as ConfirmDialogData,
+    });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        /* Non-null assertion safe — ID checked before dialog was opened */
+        this.roomService
+          .deleteRoom(roomToDelete.id!)
+          .pipe(
+            catchError((error) => {
+              console.error('Error deleting room:', error);
+              this.showError('Failed to delete room.');
+              return of(null);
+            }),
+          )
+          .subscribe(() => {
+            console.log('Room deleted:', roomToDelete);
+            this.dataSource.data.splice(index, 1);
+            this.dataSource._updateChangeSubscription();
+          });
+      }
+    });
   }
 }

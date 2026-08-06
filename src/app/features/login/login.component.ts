@@ -9,6 +9,8 @@ import { LoginService } from './login.service';
 import { LoginResponse } from './interfaces/login-response';
 import { LoginRequest } from './interfaces/login-request';
 import { AuthService } from '../../core/services/auth.service';
+/* MatSnackBar replaces native alert() for non-blocking user feedback */
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 /* Role-to-dashboard mapping so each role lands on the correct page */
 const ROLE_DASHBOARD: Record<string, string> = {
@@ -39,7 +41,16 @@ export class LoginComponent {
     private loginService: LoginService,
     private authService: AuthService,
     private router: Router,
+    private snackBar: MatSnackBar,
   ) {}
+
+  /* Reusable snackbar helpers — replace native alert() with Material snackbar */
+  private showSuccess(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 3000 });
+  }
+  private showError(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -57,17 +68,20 @@ export class LoginComponent {
           /* Store JWT token and role so the interceptor and guard can use them */
           localStorage.setItem('authToken', response.token);
           this.authService.setUserRole = response.role || 'client';
-          alert('Login Success!');
+          /* Show success feedback via Material snackbar instead of native alert */
+          this.showSuccess('Login successful');
           /* Navigate to the dashboard that matches the user's role */
           const dashboard = ROLE_DASHBOARD[response.role] || '/dashboard';
           this.router.navigate([dashboard]);
         } else {
-          alert('Incorrect username or password !');
+          /* Show error feedback via Material snackbar instead of native alert */
+          this.showError('Incorrect username or password!');
         }
       },
       error: (err) => {
         console.error('Error while trying to log in', err);
-        alert('Error happen try later');
+        /* Show error feedback via Material snackbar instead of native alert */
+        this.showError('An error occurred, please try again later');
       },
     });
   }

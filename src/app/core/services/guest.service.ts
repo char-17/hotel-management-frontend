@@ -2,13 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../environments/environment';
-import { Page } from '../../../../core/models/page.model';
-/* Import from shared model instead of defining locally */
-import { Guest } from '../../../../core/models/guest.model';
-
-/* Re-export so existing imports from this file still work */
-export { Guest } from '../../../../core/models/guest.model';
+/* Centralized imports from core — models and environment live alongside this service */
+import { environment } from '../../../environments/environment';
+import { Page } from '../models/page.model';
+import { Guest } from '../models/guest.model';
 
 @Injectable({ providedIn: 'root' })
 export class GuestService {

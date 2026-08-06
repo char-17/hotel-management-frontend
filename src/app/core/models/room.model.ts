@@ -1,5 +1,6 @@
+/* Room entity — id is optional because new rooms don't have one yet */
 export interface Room {
-  id: number;
+  id?: number;
   roomNumber: string;
   roomType: string;
   capacity: number;

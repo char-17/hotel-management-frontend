@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+/* Centralized menu state service — controls sidebar toggle across role pages */
 @Injectable({
   providedIn: 'root',
 })

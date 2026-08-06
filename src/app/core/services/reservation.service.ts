@@ -2,19 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../environments/environment';
-import { Page } from '../../../../core/models/page.model';
-
-/* Reservation model matching the backend Reservation entity */
-export interface Reservation {
-  reservationId?: number;
-  checkInDate: string;
-  checkOutDate: string;
-  numberOfGuests: number;
-  status: string;
-  guest?: { guestID: number; firstName?: string; lastName?: string };
-  room?: { id: number; roomNumber?: string };
-}
+/* Centralized imports from core — models and environment live alongside this service */
+import { environment } from '../../../environments/environment';
+import { Page } from '../models/page.model';
+import { Reservation } from '../models/reservation.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {

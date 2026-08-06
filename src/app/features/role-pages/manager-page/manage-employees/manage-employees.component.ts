@@ -13,7 +13,14 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgIf } from '@angular/common';
 import { catchError, of } from 'rxjs';
-import { Employee, EmployeeService } from './employee.service';
+/* Imports from centralized core — service and model moved out of feature folder */
+import { EmployeeService } from '../../../../core/services/employee.service';
+import { Employee } from '../../../../core/models/employee.model';
+/* MatSnackBar replaces native alert() for non-blocking user feedback */
+import { MatSnackBar } from '@angular/material/snack-bar';
+/* MatDialog + ConfirmDialogComponent replace native confirm() for delete actions */
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-manage-employees',
@@ -41,7 +48,19 @@ export class ManageEmployeesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private employeeService: EmployeeService) {}
+  constructor(
+    private employeeService: EmployeeService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+  ) {}
+
+  /* Reusable snackbar helpers — replace native alert() with Material snackbar */
+  private showSuccess(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 3000 });
+  }
+  private showError(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+  }
 
   ngOnInit() {
     this.loadData();
@@ -99,7 +118,8 @@ export class ManageEmployeesComponent implements OnInit {
       this.employeeService.create(item)
         .pipe(catchError((error) => {
           console.error('Error creating employee:', error);
-          alert('Failed to create employee.');
+          /* Material snackbar instead of native alert for error feedback */
+          this.showError('Failed to create employee.');
           this.cancelEdit();
           return of(null);
         }))
@@ -115,7 +135,8 @@ export class ManageEmployeesComponent implements OnInit {
     }
 
     if (item.employeeId === undefined) {
-      alert('Cannot save: employee ID is undefined.');
+      /* Material snackbar instead of native alert for error feedback */
+      this.showError('Cannot save: employee ID is undefined.');
       this.cancelEdit();
       return;
     }
@@ -126,7 +147,8 @@ export class ManageEmployeesComponent implements OnInit {
           this.dataSource.data[index] = this.originalItem;
           this.dataSource._updateChangeSubscription();
         }
-        alert('Failed to save changes.');
+        /* Material snackbar instead of native alert for error feedback */
+        this.showError('Failed to save changes.');
         this.cancelEdit();
         return of(item);
       }))
@@ -155,24 +177,30 @@ export class ManageEmployeesComponent implements OnInit {
     this.originalItem = null;
   }
 
-  /* Delete an employee after confirmation */
+  /* Delete an employee after confirmation — uses Material dialog instead of native confirm() */
   deleteItem(index: number): void {
     const item = this.dataSource.data[index];
     if (item.employeeId === undefined) {
-      alert('Cannot delete: employee ID is undefined.');
+      this.showError('Cannot delete: employee ID is undefined.');
       return;
     }
-    if (confirm(`Delete employee ${item.firstName} ${item.lastName}?`)) {
-      this.employeeService.delete(item.employeeId)
-        .pipe(catchError((error) => {
-          console.error('Error deleting employee:', error);
-          alert('Failed to delete employee.');
-          return of(null);
-        }))
-        .subscribe(() => {
-          this.dataSource.data.splice(index, 1);
-          this.dataSource._updateChangeSubscription();
-        });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Confirm Delete', message: `Delete employee ${item.firstName} ${item.lastName}?` } as ConfirmDialogData,
+    });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        /* Non-null assertion safe — ID checked before dialog was opened */
+        this.employeeService.delete(item.employeeId!)
+          .pipe(catchError((error) => {
+            console.error('Error deleting employee:', error);
+            this.showError('Failed to delete employee.');
+            return of(null);
+          }))
+          .subscribe(() => {
+            this.dataSource.data.splice(index, 1);
+            this.dataSource._updateChangeSubscription();
+          });
+      }
+    });
   }
 }

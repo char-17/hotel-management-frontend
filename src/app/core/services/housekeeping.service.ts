@@ -2,18 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../environments/environment';
-import { Page } from '../../../../core/models/page.model';
-
-/* Housekeeping model matching the backend Housekeeping entity */
-export interface Housekeeping {
-  houskeepingId?: number;
-  taskDate: string;
-  taskDescription: string;
-  status: string;
-  room?: { id: number; roomNumber?: string };
-  employee?: { employeeId: number; firstName?: string; lastName?: string };
-}
+/* Centralized imports from core — models and environment live alongside this service */
+import { environment } from '../../../environments/environment';
+import { Page } from '../models/page.model';
+import { Housekeeping } from '../models/housekeeping.model';
 
 @Injectable({ providedIn: 'root' })
 export class HousekeepingService {

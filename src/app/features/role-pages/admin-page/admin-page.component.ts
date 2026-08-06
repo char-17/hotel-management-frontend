@@ -10,7 +10,8 @@ import {
 } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.service';
+/* MenuService moved to core — centralized UI state management */
+import { MenuService } from '../../../core/services/menu.service';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { DashboardStats } from '../../../core/models/dashboard-stats.model';
 

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../../../environments/environment';
+/* Centralized imports from core — models and environment live alongside this service */
+import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from '../../../../../core/models/user.model';
-import { Page } from '../../../../../core/models/page.model';
-
-/* Re-export User so existing component imports keep working */
-export { User } from '../../../../../core/models/user.model';
+import { User } from '../models/user.model';
+import { Page } from '../models/page.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

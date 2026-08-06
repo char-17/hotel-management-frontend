@@ -2,17 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../environments/environment';
-import { Page } from '../../../../core/models/page.model';
-
-/* Staff model — backend uses the User entity filtered by STAFF role */
-export interface Staff {
-  id?: number;
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-}
+/* Centralized imports from core — models and environment live alongside this service */
+import { environment } from '../../../environments/environment';
+import { Page } from '../models/page.model';
+import { Staff } from '../models/staff.model';
 
 @Injectable({ providedIn: 'root' })
 export class StaffService {

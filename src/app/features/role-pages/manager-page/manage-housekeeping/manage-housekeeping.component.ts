@@ -13,7 +13,14 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgIf } from '@angular/common';
 import { catchError, of } from 'rxjs';
-import { Housekeeping, HousekeepingService } from './housekeeping.service';
+/* Imports from centralized core — service and model moved out of feature folder */
+import { HousekeepingService } from '../../../../core/services/housekeeping.service';
+import { Housekeeping } from '../../../../core/models/housekeeping.model';
+/* MatSnackBar replaces native alert() for non-blocking user feedback */
+import { MatSnackBar } from '@angular/material/snack-bar';
+/* MatDialog + ConfirmDialogComponent replace native confirm() for delete actions */
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-manage-housekeeping',
@@ -41,7 +48,19 @@ export class ManageHousekeepingComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private housekeepingService: HousekeepingService) {}
+  constructor(
+    private housekeepingService: HousekeepingService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+  ) {}
+
+  /* Reusable snackbar helpers — replace native alert() with Material snackbar */
+  private showSuccess(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 3000 });
+  }
+  private showError(msg: string): void {
+    this.snackBar.open(msg, 'Close', { duration: 5000, panelClass: ['error-snackbar'] });
+  }
 
   ngOnInit() {
     this.loadData();
@@ -96,7 +115,8 @@ export class ManageHousekeepingComponent implements OnInit {
       this.housekeepingService.create(item)
         .pipe(catchError((error) => {
           console.error('Error creating housekeeping task:', error);
-          alert('Failed to create housekeeping task.');
+          /* Material snackbar instead of native alert for error feedback */
+          this.showError('Failed to create housekeeping task.');
           this.cancelEdit();
           return of(null);
         }))
@@ -112,7 +132,8 @@ export class ManageHousekeepingComponent implements OnInit {
     }
 
     if (item.houskeepingId === undefined) {
-      alert('Cannot save: housekeeping ID is undefined.');
+      /* Material snackbar instead of native alert for error feedback */
+      this.showError('Cannot save: housekeeping ID is undefined.');
       this.cancelEdit();
       return;
     }
@@ -123,7 +144,8 @@ export class ManageHousekeepingComponent implements OnInit {
           this.dataSource.data[index] = this.originalItem;
           this.dataSource._updateChangeSubscription();
         }
-        alert('Failed to save changes.');
+        /* Material snackbar instead of native alert for error feedback */
+        this.showError('Failed to save changes.');
         this.cancelEdit();
         return of(item);
       }))
@@ -152,24 +174,30 @@ export class ManageHousekeepingComponent implements OnInit {
     this.originalItem = null;
   }
 
-  /* Delete a housekeeping task after confirmation */
+  /* Delete a housekeeping task after confirmation — uses Material dialog instead of native confirm() */
   deleteItem(index: number): void {
     const item = this.dataSource.data[index];
     if (item.houskeepingId === undefined) {
-      alert('Cannot delete: housekeeping ID is undefined.');
+      this.showError('Cannot delete: housekeeping ID is undefined.');
       return;
     }
-    if (confirm(`Delete housekeeping task #${item.houskeepingId}?`)) {
-      this.housekeepingService.delete(item.houskeepingId)
-        .pipe(catchError((error) => {
-          console.error('Error deleting housekeeping task:', error);
-          alert('Failed to delete housekeeping task.');
-          return of(null);
-        }))
-        .subscribe(() => {
-          this.dataSource.data.splice(index, 1);
-          this.dataSource._updateChangeSubscription();
-        });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Confirm Delete', message: `Delete housekeeping task #${item.houskeepingId}?` } as ConfirmDialogData,
+    });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        /* Non-null assertion safe — ID checked before dialog was opened */
+        this.housekeepingService.delete(item.houskeepingId!)
+          .pipe(catchError((error) => {
+            console.error('Error deleting housekeeping task:', error);
+            this.showError('Failed to delete housekeeping task.');
+            return of(null);
+          }))
+          .subscribe(() => {
+            this.dataSource.data.splice(index, 1);
+            this.dataSource._updateChangeSubscription();
+          });
+      }
+    });
   }
 }

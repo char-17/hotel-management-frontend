@@ -2,17 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../environments/environment';
-import { Page } from '../../../../core/models/page.model';
-
-/* Invoice model matching the backend Invoice entity */
-export interface Invoice {
-  invoiceId?: number;
-  amount: number;
-  date: string;
-  paymentStatus: string;
-  reservation?: { reservationId: number };
-}
+/* Centralized imports from core — models and environment live alongside this service */
+import { environment } from '../../../environments/environment';
+import { Page } from '../models/page.model';
+import { Invoice } from '../models/invoice.model';
 
 @Injectable({ providedIn: 'root' })
 export class InvoiceService {

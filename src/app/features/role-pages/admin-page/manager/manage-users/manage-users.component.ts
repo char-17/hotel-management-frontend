@@ -14,9 +14,14 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import { User, UserService } from './user-service.service';
+/* Imports from centralized core — service renamed and model imported separately */
+import { UserService } from '../../../../../core/services/user.service';
+import { User } from '../../../../../core/models/user.model';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+/* MatDialog + ConfirmDialogComponent replace native confirm() for delete actions */
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { MatCard } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, formatDate, NgIf } from '@angular/common';
@@ -79,6 +84,7 @@ export class ManageUsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -176,18 +182,24 @@ export class ManageUsersComponent implements OnInit {
     this.editingIndex = null;
   }
 
+  /* Use Material dialog instead of native confirm() for delete confirmation */
   deleteUser(index: number): void {
     const user = this.dataSource.data[index];
-    if (confirm(`Delete user ${user.username}?`)) {
-      this.userService.deleteUser(user.id!).subscribe({
-        next: () => {
-          this.dataSource.data.splice(index, 1);
-          this.dataSource._updateChangeSubscription();
-          this.showSuccess('User deleted successfully');
-        },
-        error: () => this.showError('Failed to delete user'),
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Confirm Delete', message: `Delete user ${user.username}?` } as ConfirmDialogData,
+    });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.userService.deleteUser(user.id!).subscribe({
+          next: () => {
+            this.dataSource.data.splice(index, 1);
+            this.dataSource._updateChangeSubscription();
+            this.showSuccess('User deleted successfully');
+          },
+          error: () => this.showError('Failed to delete user'),
+        });
+      }
+    });
   }
 
   private showSuccess(message: string): void {
