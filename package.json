@@ -20,9 +20,6 @@
     "@angular/platform-browser": "^20.3.26",
     "@angular/platform-browser-dynamic": "^20.3.26",
     "@angular/router": "^20.3.26",
-    "@auth0/angular-jwt": "^5.2.0",
-    "@ngx-translate/core": "^15.0.0",
-    "@ngx-translate/http-loader": "^8.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.1"

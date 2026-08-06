@@ -1,20 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>User Management</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link
-    href="[https://fonts.googleapis.com/icon?family=Material+Icons](https://fonts.googleapis.com/icon?family=Material+Icons)"
-    rel="stylesheet">
-  <link
-    href="[https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css](https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css)"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-</head>
-<body class="bg-gray-50 min-h-screen w-full">
+<!-- Angular component template — no DOCTYPE/html/head/body wrappers needed -->
+<div class="bg-gray-50 min-h-screen w-full">
 <div class="mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold text-gray-800 mb-6 flex items-center">
     <mat-icon class="mr-2 text-blue-600">people</mat-icon>
@@ -42,26 +27,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="password">
-          <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Password</th>
-          <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
-            <div class="flex items-center w-full">
-              <div class="flex-grow">
-                <input *ngIf="editingIndex === i"
-                                            [type]="showPassword[i] ? 'text' : 'password'"
-                                            [(ngModel)]="user.password"
-                                            class="editable-field">
-                <span *ngIf="editingIndex !== i"
-                      class="static-field">{{ showPassword[i] ? user.password : '••••••' }}</span>
-              </div>
-
-              <button mat-icon-button (click)="togglePassword(i)"
-                      class="ml-2 action-button text-gray-600 hover:text-blue-600">
-                <mat-icon>{{ showPassword[i] ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </button>
-            </div>
-          </td>
-        </ng-container>
+        <!-- Password column removed — passwords must never be displayed in the UI -->
 
         <ng-container matColumnDef="firstName">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">First Name</th>
@@ -190,5 +156,4 @@
     <mat-icon>refresh</mat-icon>
   </button>
 </div>
-</body>
-</html>
+</div>

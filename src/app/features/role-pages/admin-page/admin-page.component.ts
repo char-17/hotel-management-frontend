@@ -4,12 +4,10 @@ import { NgClass, DecimalPipe, CurrencyPipe } from '@angular/common';
 import {
   MatCard,
   MatCardAvatar,
-  MatCardContent,
   MatCardHeader,
   MatCardSubtitle,
   MatCardTitle,
 } from '@angular/material/card';
-import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MenuService } from '../../../services/ui-manipulation/header-menu/menu.service';
@@ -28,8 +26,6 @@ import { DashboardStats } from '../../../core/models/dashboard-stats.model';
         MatCardTitle,
         MatCardSubtitle,
         MatCardAvatar,
-        MatCardContent,
-        MatTooltip,
         MatIcon,
         MatProgressSpinner,
         RouterOutlet,

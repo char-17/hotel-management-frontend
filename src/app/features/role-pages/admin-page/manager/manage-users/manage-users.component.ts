@@ -54,10 +54,10 @@ import { MatTooltip } from '@angular/material/tooltip';
     ]
 })
 export class ManageUsersComponent implements OnInit {
+  /* Password column removed — passwords must never be displayed in the UI */
   displayedColumns: string[] = [
     'id',
     'username',
-    'password',
     'firstName',
     'lastName',
     'email',
@@ -72,7 +72,6 @@ export class ManageUsersComponent implements OnInit {
   editingIndex: number | null = null;
   originalUser: User | null = null;
   isCreating = false;
-  showPassword: boolean[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -99,14 +98,9 @@ export class ManageUsersComponent implements OnInit {
       .subscribe({
         next: (users) => {
           this.dataSource.data = users;
-          this.showPassword = new Array(users.length).fill(false);
         },
         error: () => this.showError('Failed to load users'),
       });
-  }
-
-  togglePassword(index: number): void {
-    this.showPassword[index] = !this.showPassword[index];
   }
 
   /* Add a blank row at the top of the table for creating a new user */
@@ -119,7 +113,6 @@ export class ManageUsersComponent implements OnInit {
     this.dataSource.data = [newUser, ...this.dataSource.data];
     this.editingIndex = 0;
     this.isCreating = true;
-    this.showPassword = [true, ...this.showPassword];
   }
 
   editUser(index: number): void {
@@ -190,7 +183,6 @@ export class ManageUsersComponent implements OnInit {
         next: () => {
           this.dataSource.data.splice(index, 1);
           this.dataSource._updateChangeSubscription();
-          this.showPassword.splice(index, 1);
           this.showSuccess('User deleted successfully');
         },
         error: () => this.showError('Failed to delete user'),
