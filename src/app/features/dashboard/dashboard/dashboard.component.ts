@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-
-/* Role-to-dashboard path mapping — same as login.component.ts */
-const ROLE_DASHBOARD: Record<string, string> = {
-  admin: '/dashboard/admin',
-  manager: '/dashboard/manager',
-};
+/* Import centralized role-dashboard mapping — shared with LoginComponent */
+import { ROLE_DASHBOARD } from '../../../core/constants/role-dashboard.constant';
 
 @Component({
     selector: 'app-dashboard',

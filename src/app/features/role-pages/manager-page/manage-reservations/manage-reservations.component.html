@@ -23,32 +23,44 @@
         <ng-container matColumnDef="checkInDate">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Check-In</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.checkInDate" type="date" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.checkInDate }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.checkInDate" type="date" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.checkInDate }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="checkOutDate">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Check-Out</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.checkOutDate" type="date" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.checkOutDate }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.checkOutDate" type="date" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.checkOutDate }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="numberOfGuests">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Guests</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.numberOfGuests" type="number" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.numberOfGuests }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.numberOfGuests" type="number" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.numberOfGuests }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Status</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.status" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.status }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.status" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.status }}</span>
+            }
           </td>
         </ng-container>
 
@@ -57,15 +69,19 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold w-40">Actions</th>
           <td mat-cell *matCellDef="let item; let i = index">
             <div class="flex space-x-2 justify-center">
-              <button *ngIf="editingIndex !== i" mat-icon-button color="primary" (click)="editItem(i)" matTooltip="Edit" class="action-button">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button *ngIf="editingIndex === i" mat-icon-button color="primary" (click)="saveItem(i)" matTooltip="Save" class="action-button">
-                <mat-icon>save</mat-icon>
-              </button>
-              <button *ngIf="editingIndex === i" mat-icon-button (click)="cancelEdit()" matTooltip="Cancel" class="action-button text-gray-600 hover:text-red-600">
-                <mat-icon>cancel</mat-icon>
-              </button>
+              @if (editingIndex !== i) {
+                <button mat-icon-button color="primary" (click)="editItem(i)" matTooltip="Edit" class="action-button">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              @if (editingIndex === i) {
+                <button mat-icon-button color="primary" (click)="saveItem(i)" matTooltip="Save" class="action-button">
+                  <mat-icon>save</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" matTooltip="Cancel" class="action-button text-gray-600 hover:text-red-600">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              }
               <button mat-icon-button color="warn" (click)="deleteItem(i)" matTooltip="Delete" class="action-button">
                 <mat-icon>delete</mat-icon>
               </button>
@@ -84,10 +100,12 @@
   </mat-card>
 
   <!-- Loading spinner -->
-  <div *ngIf="isLoading" class="flex flex-col items-center justify-center mt-16">
+  @if (isLoading) {
+  <div class="flex flex-col items-center justify-center mt-16">
     <mat-spinner diameter="64" class="mb-4"></mat-spinner>
     <p class="text-lg text-gray-600">Loading reservations data...</p>
   </div>
+  }
 
   <!-- Refresh FAB -->
   <div class="fixed bottom-4 right-4">

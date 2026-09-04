@@ -11,12 +11,8 @@ import { LoginRequest } from './interfaces/login-request';
 import { AuthService } from '../../core/services/auth.service';
 /* MatSnackBar replaces native alert() for non-blocking user feedback */
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-/* Role-to-dashboard mapping so each role lands on the correct page */
-const ROLE_DASHBOARD: Record<string, string> = {
-  admin: '/dashboard/admin',
-  manager: '/dashboard/manager',
-};
+/* Import centralized role-dashboard mapping — shared with DashboardComponent */
+import { ROLE_DASHBOARD } from '../../core/constants/role-dashboard.constant';
 
 @Component({
     selector: 'app-login',

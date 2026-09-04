@@ -23,24 +23,33 @@
         <ng-container matColumnDef="paymentDate">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Payment Date</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.paymentDate" type="date" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.paymentDate }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.paymentDate" type="date" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.paymentDate }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="amount">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Amount</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.amount" type="number" step="0.01" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.amount }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.amount" type="number" step="0.01" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.amount }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="paymentMethod">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Payment Method</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.paymentMethod" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.paymentMethod }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.paymentMethod" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.paymentMethod }}</span>
+            }
           </td>
         </ng-container>
 
@@ -49,15 +58,19 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold w-40">Actions</th>
           <td mat-cell *matCellDef="let item; let i = index">
             <div class="flex space-x-2 justify-center">
-              <button *ngIf="editingIndex !== i" mat-icon-button color="primary" (click)="editItem(i)" matTooltip="Edit" class="action-button">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button *ngIf="editingIndex === i" mat-icon-button color="primary" (click)="saveItem(i)" matTooltip="Save" class="action-button">
-                <mat-icon>save</mat-icon>
-              </button>
-              <button *ngIf="editingIndex === i" mat-icon-button (click)="cancelEdit()" matTooltip="Cancel" class="action-button text-gray-600 hover:text-red-600">
-                <mat-icon>cancel</mat-icon>
-              </button>
+              @if (editingIndex !== i) {
+                <button mat-icon-button color="primary" (click)="editItem(i)" matTooltip="Edit" class="action-button">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              @if (editingIndex === i) {
+                <button mat-icon-button color="primary" (click)="saveItem(i)" matTooltip="Save" class="action-button">
+                  <mat-icon>save</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" matTooltip="Cancel" class="action-button text-gray-600 hover:text-red-600">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              }
               <button mat-icon-button color="warn" (click)="deleteItem(i)" matTooltip="Delete" class="action-button">
                 <mat-icon>delete</mat-icon>
               </button>
@@ -75,10 +88,12 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons class="border-t" aria-label="Select page"></mat-paginator>
   </mat-card>
 
-  <div *ngIf="isLoading" class="flex flex-col items-center justify-center mt-16">
+  @if (isLoading) {
+  <div class="flex flex-col items-center justify-center mt-16">
     <mat-spinner diameter="64" class="mb-4"></mat-spinner>
     <p class="text-lg text-gray-600">Loading payments data...</p>
   </div>
+  }
 
   <div class="fixed bottom-4 right-4">
     <button mat-fab color="primary" (click)="loadData()" matTooltip="Refresh data">

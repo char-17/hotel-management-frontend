@@ -23,32 +23,44 @@
         <ng-container matColumnDef="firstName">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">First Name</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.firstName" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.firstName }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.firstName" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.firstName }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="lastName">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Last Name</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.lastName" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.lastName }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.lastName" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.lastName }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="username">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Username</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.username" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.username }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.username" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.username }}</span>
+            }
           </td>
         </ng-container>
 
         <ng-container matColumnDef="email">
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Email</th>
           <td mat-cell *matCellDef="let item; let i = index">
-            <input *ngIf="editingIndex === i" [(ngModel)]="item.email" type="email" class="editable-field">
-            <span *ngIf="editingIndex !== i" class="static-field">{{ item.email }}</span>
+            @if (editingIndex === i) {
+              <input [(ngModel)]="item.email" type="email" class="editable-field">
+            } @else {
+              <span class="static-field">{{ item.email }}</span>
+            }
           </td>
         </ng-container>
 
@@ -57,15 +69,19 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold w-40">Actions</th>
           <td mat-cell *matCellDef="let item; let i = index">
             <div class="flex space-x-2 justify-center">
-              <button *ngIf="editingIndex !== i" mat-icon-button color="primary" (click)="editItem(i)" matTooltip="Edit" class="action-button">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button *ngIf="editingIndex === i" mat-icon-button color="primary" (click)="saveItem(i)" matTooltip="Save" class="action-button">
-                <mat-icon>save</mat-icon>
-              </button>
-              <button *ngIf="editingIndex === i" mat-icon-button (click)="cancelEdit()" matTooltip="Cancel" class="action-button text-gray-600 hover:text-red-600">
-                <mat-icon>cancel</mat-icon>
-              </button>
+              @if (editingIndex !== i) {
+                <button mat-icon-button color="primary" (click)="editItem(i)" matTooltip="Edit" class="action-button">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              @if (editingIndex === i) {
+                <button mat-icon-button color="primary" (click)="saveItem(i)" matTooltip="Save" class="action-button">
+                  <mat-icon>save</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" matTooltip="Cancel" class="action-button text-gray-600 hover:text-red-600">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              }
               <button mat-icon-button color="warn" (click)="deleteItem(i)" matTooltip="Delete" class="action-button">
                 <mat-icon>delete</mat-icon>
               </button>
@@ -83,10 +99,12 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons class="border-t" aria-label="Select page"></mat-paginator>
   </mat-card>
 
-  <div *ngIf="isLoading" class="flex flex-col items-center justify-center mt-16">
+  @if (isLoading) {
+  <div class="flex flex-col items-center justify-center mt-16">
     <mat-spinner diameter="64" class="mb-4"></mat-spinner>
     <p class="text-lg text-gray-600">Loading staff data...</p>
   </div>
+  }
 
   <div class="fixed bottom-4 right-4">
     <button mat-fab color="primary" (click)="loadData()" matTooltip="Refresh data">

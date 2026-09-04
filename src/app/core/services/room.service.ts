@@ -6,34 +6,32 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Page } from '../models/page.model';
 import { Room } from '../models/room.model';
+import { CrudService } from './crud.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RoomService {
+export class RoomService implements CrudService<Room> {
   /* Uses centralized environment URL — now /api/rooms */
   private apiUrl = `${environment.apiUrl}/rooms`;
 
   constructor(private http: HttpClient) {}
 
-  /* Extract content array from paginated response */
-  getRooms(): Observable<Room[]> {
+  /* Standard CRUD methods — conform to CrudService<Room> interface */
+  getAll(): Observable<Room[]> {
     return this.http.get<Page<Room>>(this.apiUrl).pipe(map(page => page.content));
   }
 
-  getRoomById(id: number): Observable<Room> {
-    return this.http.get<Room>(`${this.apiUrl}/${id}`);
-  }
-
-  createRoom(room: Room): Observable<Room> {
+  create(room: Room): Observable<Room> {
     return this.http.post<Room>(this.apiUrl, room);
   }
 
-  updateRoom(id: number, room: Room): Observable<Room> {
+  update(id: number, room: Room): Observable<Room> {
     return this.http.put<Room>(`${this.apiUrl}/${id}`, room);
   }
 
-  deleteRoom(id: number): Observable<void> {
+  delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
 }

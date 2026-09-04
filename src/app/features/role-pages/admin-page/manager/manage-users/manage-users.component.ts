@@ -1,215 +1,69 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource,
+  MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable,
 } from '@angular/material/table';
-/* Imports from centralized core — service renamed and model imported separately */
+/* Centralized core imports */
 import { UserService } from '../../../../../core/services/user.service';
 import { User } from '../../../../../core/models/user.model';
-import { finalize } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
-/* MatDialog + ConfirmDialogComponent replace native confirm() for delete actions */
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent, ConfirmDialogData } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { CrudService } from '../../../../../core/services/crud.service';
 import { MatCard } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, formatDate, NgIf } from '@angular/common';
+/* NgIf removed — template migrated to @if/@else control flow; DatePipe/formatDate kept */
+import { DatePipe, formatDate } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
+/* Base class provides all shared CRUD logic */
+import { BaseCrudComponent } from '../../../../../shared/components/base-crud/base-crud.component';
 
 @Component({
     selector: 'app-manage-users',
     templateUrl: './manage-users.component.html',
     styleUrls: ['./manage-users.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        MatCard,
-        MatTable,
-        MatSort,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderCellDef,
-        MatCellDef,
-        FormsModule,
-        NgIf,
-        MatIcon,
-        MatCell,
-        MatIconButton,
-        MatPaginator,
-        MatProgressSpinner,
-        MatHeaderRow,
-        MatRow,
-        MatRowDef,
-        MatHeaderRowDef,
-        DatePipe,
-        MatTooltip,
-        MatFabButton,
+        MatCard, MatTable, MatSort,
+        MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCellDef,
+        FormsModule, MatIcon, MatCell, MatIconButton,
+        MatPaginator, MatProgressSpinner, MatHeaderRow, MatRow,
+        MatRowDef, MatHeaderRowDef, DatePipe, MatTooltip, MatFabButton,
     ]
 })
-export class ManageUsersComponent implements OnInit {
+export class ManageUsersComponent extends BaseCrudComponent<User> {
   /* Password column removed — passwords must never be displayed in the UI */
-  displayedColumns: string[] = [
-    'id',
-    'username',
-    'firstName',
-    'lastName',
-    'email',
-    'gender',
-    'dateOfBirth',
-    'role',
-    'actions',
+  displayedColumns = [
+    'id', 'username', 'firstName', 'lastName', 'email',
+    'gender', 'dateOfBirth', 'role', 'actions',
   ];
 
-  dataSource = new MatTableDataSource<User>([]);
-  isLoading = true;
-  editingIndex: number | null = null;
-  originalUser: User | null = null;
-  isCreating = false;
+  readonly entityName = 'user';
+  readonly service: CrudService<User>;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(
-    private userService: UserService,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-  ) {}
-
-  ngOnInit(): void {
-    this.loadUsers();
+  constructor(userService: UserService) {
+    super();
+    this.service = userService;
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  loadUsers(): void {
-    this.isLoading = true;
-    this.userService
-      .getAllUsers()
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe({
-        next: (users) => {
-          this.dataSource.data = users;
-        },
-        error: () => this.showError('Failed to load users'),
-      });
-  }
-
-  /* Add a blank row at the top of the table for creating a new user */
-  addUser(): void {
-    if (this.isCreating) return;
-    const newUser: User = {
+  createBlankItem(): User {
+    return {
       username: '', password: '', firstName: '', lastName: '',
       email: '', gender: '', dateOfBirth: '', role: 5,
     };
-    this.dataSource.data = [newUser, ...this.dataSource.data];
-    this.editingIndex = 0;
-    this.isCreating = true;
   }
 
-  editUser(index: number): void {
-    this.editingIndex = index;
-    this.isCreating = false;
-    this.originalUser = { ...this.dataSource.data[index] };
+  getItemId(item: User): number | undefined {
+    return item.id;
   }
 
-  saveUser(index: number): void {
+  /* Override to format dateOfBirth before sending to backend */
+  override saveItem(index: number): void {
     const user = this.dataSource.data[index];
-    const formattedUser: User = {
-      ...user,
-      dateOfBirth: formatDate(user.dateOfBirth, 'yyyy-MM-dd', 'en-US'),
-    };
-
-    /* Create or update depending on whether we're adding a new user */
-    if (this.isCreating) {
-      this.userService.createUser(formattedUser).subscribe({
-        next: () => {
-          this.editingIndex = null;
-          this.isCreating = false;
-          this.showSuccess('User created successfully');
-          this.loadUsers();
-        },
-        error: (error) => {
-          if (error.status === 400) {
-            this.showError('Validation error — check all fields');
-          } else {
-            this.showError('Failed to create user');
-          }
-        },
-      });
-    } else {
-      this.userService.updateUser(formattedUser).subscribe({
-        next: () => {
-          this.editingIndex = null;
-          this.showSuccess('User updated successfully');
-        },
-        error: (error) => {
-          if (error.status === 400 && error.error?.includes('username')) {
-            this.showError('User with such username already exists');
-          } else if (error.status === 404) {
-            this.showError('User not found');
-          } else {
-            this.showError('User update error');
-          }
-        },
-      });
-    }
-  }
-
-  cancelEdit(): void {
-    if (this.isCreating) {
-      /* Remove the blank row that was added for creation */
-      this.dataSource.data = this.dataSource.data.slice(1);
-      this.isCreating = false;
-    } else if (this.originalUser && this.editingIndex !== null) {
-      this.dataSource.data[this.editingIndex] = this.originalUser;
-      this.dataSource._updateChangeSubscription();
-    }
-    this.editingIndex = null;
-  }
-
-  /* Use Material dialog instead of native confirm() for delete confirmation */
-  deleteUser(index: number): void {
-    const user = this.dataSource.data[index];
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { title: 'Confirm Delete', message: `Delete user ${user.username}?` } as ConfirmDialogData,
-    });
-    dialogRef.afterClosed().subscribe(confirmed => {
-      if (confirmed) {
-        this.userService.deleteUser(user.id!).subscribe({
-          next: () => {
-            this.dataSource.data.splice(index, 1);
-            this.dataSource._updateChangeSubscription();
-            this.showSuccess('User deleted successfully');
-          },
-          error: () => this.showError('Failed to delete user'),
-        });
-      }
-    });
-  }
-
-  private showSuccess(message: string): void {
-    this.snackBar.open(message, 'Close', { duration: 3000 });
-  }
-
-  private showError(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['error-snackbar'],
-    });
+    /* Format date to yyyy-MM-dd before sending to backend */
+    user.dateOfBirth = formatDate(user.dateOfBirth, 'yyyy-MM-dd', 'en-US');
+    super.saveItem(index);
   }
 }

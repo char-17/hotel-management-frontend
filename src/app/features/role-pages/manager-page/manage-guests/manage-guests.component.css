@@ -1,17 +1,1 @@
-/* Table header styling */
-th {
-  font-weight: bold;
-  font-size: large;
-}
-.editable-field {
-  @apply w-full p-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500;
-}
-.static-field {
-  @apply truncate;
-}
-.action-button {
-  @apply transition-all duration-200 hover:scale-110;
-}
-.error-snackbar {
-  @apply bg-red-500 text-white;
-}
+/* Styles moved to global styles.css — shared across all manage-* components */
