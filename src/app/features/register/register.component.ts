@@ -4,12 +4,10 @@ import {
   FormBuilder,
   FormGroup,
   FormGroupDirective,
-  FormsModule,
   NgForm,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import {
   ErrorStateMatcher,
   MatNativeDateModule,
@@ -50,8 +48,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.css'],
     imports: [
-        CommonModule,
-        FormsModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,

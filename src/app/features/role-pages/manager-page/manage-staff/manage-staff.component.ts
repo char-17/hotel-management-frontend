@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable,
@@ -24,7 +24,7 @@ import { BaseCrudComponent } from '../../../../shared/components/base-crud/base-
   styleUrl: './manage-staff.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule, MatIcon, MatCard, MatTable, MatSort,
+    ReactiveFormsModule, MatIcon, MatCard, MatTable, MatSort,
     MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCell, MatCellDef,
     MatIconButton, MatTooltip, MatHeaderRow, MatHeaderRowDef,
     MatRow, MatRowDef, MatPaginator, MatProgressSpinner, MatFabButton,
@@ -49,5 +49,15 @@ export class ManageStaffComponent extends BaseCrudComponent<Staff> {
 
   getItemId(item: Staff): number | undefined {
     return item.id;
+  }
+
+  /* Build reactive form for inline staff editing */
+  buildEditForm(item: Staff): FormGroup {
+    return this.fb.group({
+      firstName: [item.firstName, Validators.required],
+      lastName: [item.lastName, Validators.required],
+      username: [item.username, Validators.required],
+      email: [item.email, [Validators.required, Validators.email]],
+    });
   }
 }

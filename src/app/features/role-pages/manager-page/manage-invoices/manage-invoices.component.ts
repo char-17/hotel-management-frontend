@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable,
@@ -24,7 +24,7 @@ import { BaseCrudComponent } from '../../../../shared/components/base-crud/base-
   styleUrl: './manage-invoices.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule, MatIcon, MatCard, MatTable, MatSort,
+    ReactiveFormsModule, MatIcon, MatCard, MatTable, MatSort,
     MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCell, MatCellDef,
     MatIconButton, MatTooltip, MatHeaderRow, MatHeaderRowDef,
     MatRow, MatRowDef, MatPaginator, MatProgressSpinner, MatFabButton,
@@ -49,5 +49,14 @@ export class ManageInvoicesComponent extends BaseCrudComponent<Invoice> {
 
   getItemId(item: Invoice): number | undefined {
     return item.invoiceId;
+  }
+
+  /* Build reactive form for inline invoice editing */
+  buildEditForm(item: Invoice): FormGroup {
+    return this.fb.group({
+      amount: [item.amount, [Validators.required, Validators.min(0)]],
+      date: [item.date, Validators.required],
+      paymentStatus: [item.paymentStatus, Validators.required],
+    });
   }
 }

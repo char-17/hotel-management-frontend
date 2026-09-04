@@ -9,51 +9,51 @@
             <mat-form-field appearance="fill" class="w-full">
               <mat-label>First Name</mat-label>
               <input matInput formControlName="firstName" required>
-              <mat-error *ngIf="registerForm.get('firstName')?.hasError('required')">
-                First Name is required
-              </mat-error>
+              @if (registerForm.get('firstName')?.hasError('required')) {
+                <mat-error>First Name is required</mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="mb-3">
             <mat-form-field appearance="fill" class="w-full">
               <mat-label>Last Name</mat-label>
               <input matInput formControlName="lastName" required>
-              <mat-error *ngIf="registerForm.get('lastName')?.hasError('required')">
-                Last Name is required
-              </mat-error>
+              @if (registerForm.get('lastName')?.hasError('required')) {
+                <mat-error>Last Name is required</mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="mb-4">
             <mat-form-field appearance="fill" class="w-full">
               <mat-label>Username</mat-label>
               <input matInput formControlName="username" required>
-              <mat-error *ngIf="registerForm.get('username')?.hasError('required')">
-                Username is required
-              </mat-error>
+              @if (registerForm.get('username')?.hasError('required')) {
+                <mat-error>Username is required</mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="mb-4">
             <mat-form-field appearance="fill" class="w-full">
               <mat-label>Password</mat-label>
               <input matInput type="password" formControlName="password" required>
-              <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
-                Password is required
-              </mat-error>
-              <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
-                Password must be at least 6 characters long
-              </mat-error>
+              @if (registerForm.get('password')?.hasError('required')) {
+                <mat-error>Password is required</mat-error>
+              }
+              @if (registerForm.get('password')?.hasError('minlength')) {
+                <mat-error>Password must be at least 6 characters long</mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="mb-4">
             <mat-form-field appearance="fill" class="w-full">
               <mat-label>Email</mat-label>
               <input matInput formControlName="email" required>
-              <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
-                Email is required
-              </mat-error>
-              <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-                Enter a valid email
-              </mat-error>
+              @if (registerForm.get('email')?.hasError('required')) {
+                <mat-error>Email is required</mat-error>
+              }
+              @if (registerForm.get('email')?.hasError('email')) {
+                <mat-error>Enter a valid email</mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="mb-4">
@@ -63,12 +63,12 @@
                 <mat-option value="male">Male ♂</mat-option>
                 <mat-option value="female">Female ♀</mat-option>
               </mat-select>
-              <mat-error *ngIf="registerForm.get('validSelection')?.hasError('required')">
-                You must make a selection
-              </mat-error>
-              <mat-error *ngIf="registerForm.get('validSelection')?.hasError('pattern') && !registerForm.get('validSelection')?.hasError('required')">
-                Your selection is invalid
-              </mat-error>
+              @if (registerForm.get('validSelection')?.hasError('required')) {
+                <mat-error>You must make a selection</mat-error>
+              }
+              @if (registerForm.get('validSelection')?.hasError('pattern') && !registerForm.get('validSelection')?.hasError('required')) {
+                <mat-error>Your selection is invalid</mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="mb-4">
@@ -77,9 +77,9 @@
               <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" required>
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
-              <mat-error *ngIf="registerForm.get('dateOfBirth')?.hasError('required')">
-                Date of Birth is required
-              </mat-error>
+              @if (registerForm.get('dateOfBirth')?.hasError('required')) {
+                <mat-error>Date of Birth is required</mat-error>
+              }
             </mat-form-field>
           </div>
           <div class="mb-4">

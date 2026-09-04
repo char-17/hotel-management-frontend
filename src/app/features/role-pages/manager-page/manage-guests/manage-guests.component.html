@@ -24,7 +24,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">First Name</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.firstName" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('firstName')" class="editable-field">
             } @else {
               <span class="static-field">{{ item.firstName }}</span>
             }
@@ -35,7 +36,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Last Name</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.lastName" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('lastName')" class="editable-field">
             } @else {
               <span class="static-field">{{ item.lastName }}</span>
             }
@@ -46,7 +48,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Email</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.email" type="email" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('email')" type="email" class="editable-field">
             } @else {
               <span class="static-field">{{ item.email }}</span>
             }
@@ -57,7 +60,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Phone</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.phone" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('phone')" class="editable-field">
             } @else {
               <span class="static-field">{{ item.phone }}</span>
             }
@@ -69,7 +73,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Nationality</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.nationality" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('nationality')" class="editable-field">
             } @else {
               <span class="static-field">{{ item.nationality }}</span>
             }
@@ -81,7 +86,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Passport No.</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.passportNumber" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('passportNumber')" class="editable-field">
             } @else {
               <span class="static-field">{{ item.passportNumber }}</span>
             }

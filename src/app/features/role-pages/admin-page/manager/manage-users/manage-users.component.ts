@@ -10,8 +10,8 @@ import { UserService } from '../../../../../core/services/user.service';
 import { User } from '../../../../../core/models/user.model';
 import { CrudService } from '../../../../../core/services/crud.service';
 import { MatCard } from '@angular/material/card';
-import { FormsModule } from '@angular/forms';
-/* NgIf removed — template migrated to @if/@else control flow; DatePipe/formatDate kept */
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+/* DatePipe for display, formatDate for backend submission */
 import { DatePipe, formatDate } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton, MatIconButton } from '@angular/material/button';
@@ -28,7 +28,7 @@ import { BaseCrudComponent } from '../../../../../shared/components/base-crud/ba
     imports: [
         MatCard, MatTable, MatSort,
         MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCellDef,
-        FormsModule, MatIcon, MatCell, MatIconButton,
+        ReactiveFormsModule, MatIcon, MatCell, MatIconButton,
         MatPaginator, MatProgressSpinner, MatHeaderRow, MatRow,
         MatRowDef, MatHeaderRowDef, DatePipe, MatTooltip, MatFabButton,
     ]
@@ -59,11 +59,28 @@ export class ManageUsersComponent extends BaseCrudComponent<User> {
     return item.id;
   }
 
+  /* Build reactive form for inline user editing */
+  buildEditForm(item: User): FormGroup {
+    return this.fb.group({
+      username: [item.username, Validators.required],
+      firstName: [item.firstName, Validators.required],
+      lastName: [item.lastName, Validators.required],
+      email: [item.email, [Validators.required, Validators.email]],
+      gender: [item.gender, Validators.required],
+      dateOfBirth: [item.dateOfBirth, Validators.required],
+      role: [item.role, [Validators.required, Validators.min(1)]],
+    });
+  }
+
   /* Override to format dateOfBirth before sending to backend */
   override saveItem(index: number): void {
-    const user = this.dataSource.data[index];
-    /* Format date to yyyy-MM-dd before sending to backend */
-    user.dateOfBirth = formatDate(user.dateOfBirth, 'yyyy-MM-dd', 'en-US');
+    /* Format the date in the reactive form before base class merges values */
+    const rawDate = this.editForm?.get('dateOfBirth')?.value;
+    if (rawDate) {
+      this.editForm?.get('dateOfBirth')?.setValue(
+        formatDate(rawDate, 'yyyy-MM-dd', 'en-US')
+      );
+    }
     super.saveItem(index);
   }
 }

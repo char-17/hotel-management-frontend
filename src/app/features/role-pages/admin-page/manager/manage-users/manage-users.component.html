@@ -21,7 +21,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Username</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             @if (editingIndex === i) {
-              <input [(ngModel)]="user.username" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('username')" class="editable-field">
             } @else {
               <span class="static-field">{{ user.username }}</span>
             }
@@ -34,7 +35,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">First Name</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             @if (editingIndex === i) {
-              <input [(ngModel)]="user.firstName" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('firstName')" class="editable-field">
             } @else {
               <span class="static-field">{{ user.firstName }}</span>
             }
@@ -45,7 +47,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Last Name</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             @if (editingIndex === i) {
-              <input [(ngModel)]="user.lastName" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('lastName')" class="editable-field">
             } @else {
               <span class="static-field">{{ user.lastName }}</span>
             }
@@ -56,7 +59,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Email</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             @if (editingIndex === i) {
-              <input [(ngModel)]="user.email" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('email')" class="editable-field">
             } @else {
               <span class="static-field">{{ user.email }}</span>
             }
@@ -67,7 +71,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Gender</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             @if (editingIndex === i) {
-              <input [(ngModel)]="user.gender" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('gender')" class="editable-field">
             } @else {
               <span class="static-field">{{ user.gender }}</span>
             }
@@ -78,7 +83,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Date of Birth</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             @if (editingIndex === i) {
-              <input type="date" [(ngModel)]="user.dateOfBirth" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input type="date" [formControl]="getControl('dateOfBirth')" class="editable-field">
             } @else {
               <span class="static-field">{{ user.dateOfBirth | date }}</span>
             }
@@ -89,7 +95,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Role</th>
           <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4">
             @if (editingIndex === i) {
-              <input [(ngModel)]="user.role" class="editable-field">
+              <!-- Bound to reactive FormGroup via BaseCrudComponent.getControl() -->
+              <input [formControl]="getControl('role')" class="editable-field">
             } @else {
               <span class="static-field">{{ user.role }}</span>
             }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable,
@@ -24,7 +24,7 @@ import { BaseCrudComponent } from '../../../../shared/components/base-crud/base-
   styleUrl: './manage-guests.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule, MatIcon, MatCard, MatTable, MatSort,
+    ReactiveFormsModule, MatIcon, MatCard, MatTable, MatSort,
     MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCell, MatCellDef,
     MatIconButton, MatTooltip, MatHeaderRow, MatHeaderRowDef,
     MatRow, MatRowDef, MatPaginator, MatProgressSpinner, MatFabButton,
@@ -52,5 +52,17 @@ export class ManageGuestsComponent extends BaseCrudComponent<Guest> {
 
   getItemId(item: Guest): number | undefined {
     return item.guestID;
+  }
+
+  /* Build reactive form for inline guest editing */
+  buildEditForm(item: Guest): FormGroup {
+    return this.fb.group({
+      firstName: [item.firstName, Validators.required],
+      lastName: [item.lastName, Validators.required],
+      email: [item.email, [Validators.required, Validators.email]],
+      phone: [item.phone, Validators.required],
+      nationality: [item.nationality],
+      passportNumber: [item.passportNumber],
+    });
   }
 }

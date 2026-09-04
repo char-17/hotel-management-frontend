@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
   MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable,
@@ -27,7 +28,7 @@ import { BaseCrudComponent } from '../../../../../shared/components/base-crud/ba
     imports: [
         MatIcon, MatCard, MatTable, MatSort,
         MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCell, MatCellDef,
-        FormsModule, MatIconButton, MatTooltip,
+        ReactiveFormsModule, MatIconButton, MatTooltip,
         MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
         MatPaginator, MatProgressSpinner, MatFabButton,
     ]
@@ -51,5 +52,16 @@ export class ManageRoomsComponent extends BaseCrudComponent<Room> {
 
   getItemId(item: Room): number | undefined {
     return item.id;
+  }
+
+  /* Build reactive form for inline room editing */
+  buildEditForm(item: Room): FormGroup {
+    return this.fb.group({
+      roomNumber: [item.roomNumber, Validators.required],
+      roomType: [item.roomType, Validators.required],
+      capacity: [item.capacity, [Validators.required, Validators.min(1)]],
+      roomPrice: [item.roomPrice, [Validators.required, Validators.min(0)]],
+      roomStatus: [item.roomStatus, Validators.required],
+    });
   }
 }

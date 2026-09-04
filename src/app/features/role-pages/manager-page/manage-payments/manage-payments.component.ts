@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable,
@@ -24,7 +24,7 @@ import { BaseCrudComponent } from '../../../../shared/components/base-crud/base-
   styleUrl: './manage-payments.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    FormsModule, MatIcon, MatCard, MatTable, MatSort,
+    ReactiveFormsModule, MatIcon, MatCard, MatTable, MatSort,
     MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatCell, MatCellDef,
     MatIconButton, MatTooltip, MatHeaderRow, MatHeaderRowDef,
     MatRow, MatRowDef, MatPaginator, MatProgressSpinner, MatFabButton,
@@ -49,5 +49,14 @@ export class ManagePaymentsComponent extends BaseCrudComponent<Payment> {
 
   getItemId(item: Payment): number | undefined {
     return item.paymentId;
+  }
+
+  /* Build reactive form for inline payment editing */
+  buildEditForm(item: Payment): FormGroup {
+    return this.fb.group({
+      paymentDate: [item.paymentDate, Validators.required],
+      amount: [item.amount, [Validators.required, Validators.min(0)]],
+      paymentMethod: [item.paymentMethod, Validators.required],
+    });
   }
 }

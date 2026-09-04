@@ -1,6 +1,7 @@
 import {
   AfterViewInit, ChangeDetectorRef, Directive, inject, OnInit, ViewChild,
 } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,8 +15,9 @@ import {
 
 /**
  * Abstract base for all inline CRUD table components.
- * Subclasses only provide: service, entityName, displayedColumns,
- * createBlankItem(), and getItemId().
+ * Subclasses provide: service, entityName, displayedColumns,
+ * createBlankItem(), getItemId(), and buildEditForm().
+ * Uses reactive forms — each row being edited gets its own FormGroup.
  */
 @Directive()
 export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
@@ -25,6 +27,8 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
   editingIndex: number | null = null;
   originalItem: T | null = null;
   isCreating = false;
+  /* Reactive form for the row currently being edited */
+  editForm: FormGroup | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -33,13 +37,16 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
   protected snackBar = inject(MatSnackBar);
   protected dialog = inject(MatDialog);
   protected cdr = inject(ChangeDetectorRef);
+  protected fb = inject(FormBuilder);
 
-  /* Subclass must provide these four members */
+  /* Subclass must provide these members */
   abstract readonly service: CrudService<T>;
   abstract readonly entityName: string;
   abstract readonly displayedColumns: string[];
   abstract createBlankItem(): T;
   abstract getItemId(item: T): number | undefined;
+  /* Build a FormGroup pre-filled with the item's values and validators */
+  abstract buildEditForm(item: T): FormGroup;
 
   ngOnInit(): void {
     this.loadData();
@@ -49,6 +56,11 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
     /* Wire Material paginator and sort to the data source */
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  /* Helper to get a typed FormControl from the edit form — used in templates */
+  getControl(name: string): FormControl {
+    return this.editForm!.get(name) as FormControl;
   }
 
   /* Snackbar helpers — shared across all manage-* components */
@@ -87,17 +99,30 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
     this.dataSource.data = data;
     this.editingIndex = 0;
     this.isCreating = true;
+    /* Create reactive form for the new blank row */
+    this.editForm = this.buildEditForm(newItem);
   }
 
   /* Enter edit mode for a row */
   editItem(index: number): void {
     this.editingIndex = index;
     this.originalItem = { ...this.dataSource.data[index] };
+    /* Create reactive form pre-filled with current row values */
+    this.editForm = this.buildEditForm(this.dataSource.data[index]);
   }
 
   /* Save the edited row — POST for new, PUT for existing */
   saveItem(index: number): void {
-    const item = this.dataSource.data[index];
+    /* Validate the reactive form before saving */
+    if (this.editForm && !this.editForm.valid) {
+      this.editForm.markAllAsTouched();
+      this.showError('Please fix validation errors before saving.');
+      return;
+    }
+
+    /* Merge form values back into the data row */
+    const item = { ...this.dataSource.data[index], ...this.editForm?.value } as T;
+    this.dataSource.data[index] = item;
 
     if (this.isCreating) {
       this.service.create(item)
@@ -113,6 +138,7 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
           if (created) {
             this.isCreating = false;
             this.editingIndex = null;
+            this.editForm = null;
             this.loadData();
           }
           /* Notify OnPush — editing state changed */
@@ -144,6 +170,7 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
       .subscribe(() => {
         this.editingIndex = null;
         this.originalItem = null;
+        this.editForm = null;
         /* Notify OnPush — editing state cleared */
         this.cdr.markForCheck();
       });
@@ -157,6 +184,7 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
       this.dataSource.data = data;
       this.isCreating = false;
       this.editingIndex = null;
+      this.editForm = null;
       return;
     }
     if (this.editingIndex !== null && this.originalItem) {
@@ -165,6 +193,7 @@ export abstract class BaseCrudComponent<T> implements OnInit, AfterViewInit {
     }
     this.editingIndex = null;
     this.originalItem = null;
+    this.editForm = null;
   }
 
   /* Delete after confirmation via Material dialog */

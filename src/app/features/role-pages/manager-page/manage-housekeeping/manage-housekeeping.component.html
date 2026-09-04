@@ -24,7 +24,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Task Date</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.taskDate" type="date" class="editable-field">
+              <!-- Bind to reactive FormControl from BaseCrudComponent instead of ngModel -->
+              <input [formControl]="getControl('taskDate')" type="date" class="editable-field">
             } @else {
               <span class="static-field">{{ item.taskDate }}</span>
             }
@@ -35,7 +36,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Description</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.taskDescription" class="editable-field">
+              <!-- Bind to reactive FormControl from BaseCrudComponent instead of ngModel -->
+              <input [formControl]="getControl('taskDescription')" class="editable-field">
             } @else {
               <span class="static-field">{{ item.taskDescription }}</span>
             }
@@ -46,7 +48,8 @@
           <th mat-header-cell *matHeaderCellDef class="bg-blue-50 font-bold">Status</th>
           <td mat-cell *matCellDef="let item; let i = index">
             @if (editingIndex === i) {
-              <input [(ngModel)]="item.status" class="editable-field">
+              <!-- Bind to reactive FormControl from BaseCrudComponent instead of ngModel -->
+              <input [formControl]="getControl('status')" class="editable-field">
             } @else {
               <span class="static-field">{{ item.status }}</span>
             }
